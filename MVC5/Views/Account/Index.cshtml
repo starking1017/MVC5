@@ -1,0 +1,35 @@
+﻿@model IEnumerable<MVC5.Models.ApplicationUser>
+@{
+  ViewBag.Title = "Edit User";
+}
+<h2>帳戶管理</h2>
+<table class="table">
+  <tr>
+    <th>
+      @Html.DisplayNameFor(model => model.IsEnabled)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.UserName)
+    </th>
+  </tr>
+
+  @foreach (var item in Model)
+  {
+    <tr>
+      <td>
+        @Html.DisplayFor(modelItem => item.IsEnabled)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.UserName)
+      </td>
+      <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+      </td>
+    </tr>
+  }
+
+</table>
+
+
+
+

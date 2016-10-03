@@ -233,7 +233,12 @@
     <Compile Include="Migrations\201609270820261_onetomany.Designer.cs">
       <DependentUpon>201609270820261_onetomany.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610032037318_addrole.cs" />
+    <Compile Include="Migrations\201610032037318_addrole.Designer.cs">
+      <DependentUpon>201610032037318_addrole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\DeviceModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -327,6 +332,8 @@
     <Content Include="Views\Devices\Edit.cshtml" />
     <Content Include="Views\Devices\Index.cshtml" />
     <Content Include="Views\Account\ManagerAccountLogin.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -350,6 +357,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609270820261_onetomany.resx">
       <DependentUpon>201609270820261_onetomany.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610032037318_addrole.resx">
+      <DependentUpon>201610032037318_addrole.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

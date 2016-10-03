@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MVC5.Models;
@@ -17,9 +20,11 @@ namespace MVC5.Controllers
   {
     private ApplicationSignInManager _signInManager;
     private ApplicationUserManager _userManager;
+    ApplicationDbContext AppDBcontext;
 
     public AccountController()
     {
+      AppDBcontext = new ApplicationDbContext();
     }
 
     public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -52,6 +57,85 @@ namespace MVC5.Controllers
       }
     }
 
+    //
+    // GET: /Account/Index
+    [AllowAnonymous]
+    public ActionResult Index()
+    {
+      if (User.Identity.IsAuthenticated)
+      {
+        ViewBag.displayMenu = "No";
+
+        if (isAdminUser())
+        {
+          ViewBag.displayMenu = "Yes";
+        }
+      }
+      else
+      {
+        return RedirectToAction("Index", "Home");
+      }
+
+      var user = AppDBcontext.Users.ToList();
+      return View(user);
+    }
+
+    // GET: Devices/Edit/5
+    [Authorize]
+    public async Task<ActionResult> Edit(string id)
+    {
+      if (id == null)
+      {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      ApplicationUser user = AppDBcontext.Users.Find(id);
+      if (user == null)
+      {
+        return HttpNotFound();
+      }
+      return View(user);
+    }
+
+    // POST: Devices/Edit/5
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Edit([Bind(Include = "Id,IsEnabled,Email,EmailConfirm,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser user)
+    {
+      ApplicationUser currentUser = AppDBcontext.Users.Find(user.Id);
+      if (ModelState.IsValid)
+      {
+        currentUser.IsEnabled = user.IsEnabled;
+        AppDBcontext.Entry(currentUser).State = EntityState.Modified;
+        await AppDBcontext.SaveChangesAsync();
+        return RedirectToAction("Index");
+      }
+      return View(currentUser);
+    }
+
+    public bool isAdminUser()
+    {
+      if (User.Identity.IsAuthenticated)
+      {
+        var user = User.Identity;
+        var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(AppDBcontext));
+        var s = UserManager.GetRoles(user.GetUserId());
+        if (s.Count > 0)
+        {
+          if (s[0].ToString() == "Admin")
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
+        }
+      }
+      return false;
+    }
     //
     // GET: /Account/Login
     [AllowAnonymous]
