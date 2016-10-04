@@ -13,10 +13,10 @@ namespace MVC5
     public void Configuration(IAppBuilder app)
     {
       ConfigureAuth(app);
-      createRolesandUsers();
+      CreateRolesandUsers();
     }
 
-    private void createRolesandUsers()
+    private void CreateRolesandUsers()
     {
       ApplicationDbContext context = new ApplicationDbContext();
 

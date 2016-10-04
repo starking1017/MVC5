@@ -11,6 +11,10 @@ namespace MVC5
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/kendo").Include(
+                        "~/Scripts/kendo.all.min.js",
+                        "~/Scripts/kendo.aspnetmvc.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
@@ -25,6 +29,13 @@ namespace MVC5
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/kendo.bootstrap.min.css",
+                      "~/Content/kendo.common-bootstrap.min",
+                      "~/Content/kendo/2016.3.914/kendo.common.min.css",
+                      "~/Content/kendo/2016.3.914/kendo.mobile.all.min.css",
+                      "~/Content/kendo/2016.3.914/kendo.dataviz.min.css",
+                      "~/Content/kendo/2016.3.914/kendo.default.min.css",
+                      "~/Content/kendo/2016.3.914/kendo.dataviz.default.min.css",
                       "~/Content/site.css"));
         }
     }
