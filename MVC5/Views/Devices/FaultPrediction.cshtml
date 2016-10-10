@@ -1,0 +1,50 @@
+﻿@model MVC5.Models.Device
+
+@{
+  ViewBag.Title = "title";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@*header*@
+<div class="row">
+  <div class="col-sm-4">
+    <h2>故障預測</h2>
+
+  </div>
+  <div>
+    <input type="button" class="btn btn-primary pull-right" value="回生命管理選單"
+           onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">數據上傳</div>
+  <div class="panel-body">
+    <img src="~/temp/@ViewBag.name" alt="" />
+
+    <ul>
+      <li>
+        以下功能要求您在設備信息頁面上傳設備安裝年份表
+      </li>
+    </ul>
+    <div class="form-inline">
+      <label>預測到</label>
+      <select class="form-control">
+        @for (int i = 0; i < 50; ++i)
+        {
+
+          <option>@(2016 + i)</option>
+        }
+      </select>
+      <label>
+        年以前，您的xxx報廢數量將為N台
+      </label>
+    </div>
+
+    <p></p>
+    <input type="button" class="btn btn-success" value="詳細設備報廢率報告" />
+
+  </div>
+</div>

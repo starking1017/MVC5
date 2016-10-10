@@ -108,18 +108,19 @@
 <div class="box">
   <h4>上傳設備ID-安裝年份表格</h4>
 </div>
-<div class="col-md-12">
-  <div class="demo-section k-content">
-    @(Html.Kendo().Upload()
+<div class="row">
+  <div class="col-md-8">
+    <div class="demo-section k-content">
+      @(Html.Kendo().Upload()
         .Name("files")
         .Async(a => a
           .Save("Save", "Devices")
           .Remove("Remove", "Devices")
           .SaveField("files"))
-        )
+      )
+    </div>
   </div>
 </div>
-<div class="row"></div>
 <p></p>
 <div>
   @Html.ActionLink("返回列表", "Index")

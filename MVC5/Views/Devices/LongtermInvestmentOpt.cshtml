@@ -1,0 +1,74 @@
+﻿@model MVC5.Models.Device
+
+@{
+  ViewBag.Title = "title";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*header*@
+<div class="row">
+  <div class="col-sm-4">
+    <h2>長期投資優化</h2>
+
+  </div>
+  <div>
+    <input type="button" class="btn btn-primary pull-right" value="回生命管理選單"
+           onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">長期投資優化</div>
+  <div class="panel-body">
+    <p></p>
+    <form class="form-horizontal">
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">請輸入年均最大投資額</label>
+        <div class="col-sm-4">
+          <input class="form-control" type="text" placeholder="10000" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">固定投資週期</label>
+        <div class="col-sm-4">
+          <input class="form-control" type="text" placeholder="10" />
+        </div>
+        <div class="col-sm-2">
+          <button type="submit" class="btn btn-success form-control">運行</button>
+        </div>
+      </div>
+
+    </form>
+
+    <p></p>
+
+    <img src="~/temp/@ViewBag.name" alt="" />
+    <p></p>
+
+    <div class="well well-sm">
+      <div class="row">
+          <label class="control-label col-sm-3">最優年均主動投資額為:</label>
+          <div class="col-sm-9">
+            <label class="k-bold text-success">10000</label>
+          </div>
+      </div>
+
+      <div class="row">
+          <label class="control-label col-sm-3">此投資額下的被動更換費用為:</label>
+          <div class="col-sm-9">
+            <label class="k-bold text-success">10000</label>
+          </div>
+      </div>
+
+      <div class="row">
+        <label class="control-label col-sm-3">此投資額下的年均總支出為:</label>
+        <div class="col-sm-9">
+          <label class="k-bold text-success">10000</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

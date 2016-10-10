@@ -141,15 +141,6 @@ namespace MVC5.Controllers
       return View("LifeManageMenu",device);
     }
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        db.Dispose();
-      }
-      base.Dispose(disposing);
-    }
-
     public ActionResult Save(IEnumerable<HttpPostedFileBase> files)
     {
       // The Name of the Upload component is "files"
@@ -194,6 +185,66 @@ namespace MVC5.Controllers
 
       // Return an empty string to signify success
       return Content("");
+    }
+
+
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        db.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    // GET: Devices/AgingCurve/5
+    [Authorize]
+    public async Task<ActionResult> AgingCurve(int? id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("AgingCurve", device);
+    }
+
+    public async Task<ActionResult> FaultPrediction(int id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("FaultPrediction", device);
+    }
+
+    public async Task<ActionResult> RiskMining(int id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("RiskMining", device);
+    }
+
+    public async Task<ActionResult> OptReplaceage(int id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("OptReplaceage", device);
+    }
+
+    public async Task<ActionResult> OptReplaceage2(int id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("OptReplaceage2", device);
+    }
+
+    public async Task<ActionResult> OptReplaceage3(int id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("OptReplaceage3", device);
+    }
+
+    public async Task<ActionResult> LongtermInvestmentOpt(int id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("LongtermInvestmentOpt", device);
+    }
+
+    public async Task<ActionResult> CloudComparison(int id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("CloudComparison", device);
     }
   }
 }

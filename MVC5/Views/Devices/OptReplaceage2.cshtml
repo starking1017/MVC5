@@ -1,0 +1,29 @@
+﻿@model MVC5.Models.Device
+
+@{
+  ViewBag.Title = "title";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*header*@
+<div class="row">
+  <div class="col-sm-4">
+    <h2>最優更換年齡-3</h2>
+
+  </div>
+  <div>
+    <input type="button" class="btn btn-primary pull-right" value="回生命管理選單"
+           onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">最優更換年齡-3</div>
+  <div class="panel-body">
+    <label>Monte Carlo 仿真 (Proactive + Reactive)</label>
+    <p></p>
+    <img src="~/temp/@ViewBag.name" alt="" />
+    <p></p>
+    
+  </div>
+</div>

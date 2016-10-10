@@ -93,18 +93,18 @@
     </dl>
   </div>
   <div class="col-lg-4 btn-group-vertical btn-group-lg col-lg-offset-4">
-    <input type="submit" class="btn btn-info btn-lg" value="衰老曲線">
+    <input type="submit" class="btn btn-primary" value="衰老曲線" onclick="location.href='@Url.Action("AgingCurve", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-info" value="衰老曲線">
+    <input type="submit" class="btn btn-primary" value="故障預測" onclick="location.href='@Url.Action("FaultPrediction", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-info" value="衰老曲線">
+    <input type="submit" class="btn btn-primary" value="風險挖掘" onclick="location.href='@Url.Action("RiskMining", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-info" value="衰老曲線">
+    <input type="submit" class="btn btn-primary" value="最優更換年齡" onclick="location.href='@Url.Action("OptReplaceage", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-info" value="衰老曲線">
+    <input type="submit" class="btn btn-primary" value="長期投資優化" onclick="location.href='@Url.Action("LongtermInvestmentOpt", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-info" value="衰老曲線">
+    <input type="submit" class="btn btn-primary" value="雲比較" onclick="location.href='@Url.Action("CloudComparison", "Devices", new { id = Model.ID })'">
     <p></p>
   </div>
-
+  <div class="row"></div>
 </div>

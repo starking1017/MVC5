@@ -80,9 +80,9 @@ namespace MVC5.Controllers
       return View(user);
     }
 
-    // GET: Devices/Edit/5
+    // GET: Acocunt/Edit/5
     [Authorize]
-    public async Task<ActionResult> Edit(string id)
+    public ActionResult Edit(string id)
     {
       if (id == null)
       {
@@ -96,7 +96,7 @@ namespace MVC5.Controllers
       return View(user);
     }
 
-    // POST: Devices/Edit/5
+    // POST: Acocunt/Edit/5
     // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
