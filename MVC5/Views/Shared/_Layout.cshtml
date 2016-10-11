@@ -29,17 +29,17 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        @Html.ActionLink("落磯山設備生命管理平台", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        @Html.ActionLink("落矶山设备生命管理平台", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li>@Html.ActionLink("設備列表", "Index", "Devices")</li>
+          <li>@Html.ActionLink("设备列表", "Index", "Devices")</li>
           @if (ViewBag.displayMenu == "Yes")
           {
-            <li>@Html.ActionLink("帳戶管理", "Index", "Account")</li>
+            <li>@Html.ActionLink("账户管理", "Index", "Account")</li>
           }
           @*<li>@Html.ActionLink("About", "About", "Home")</li>*@
-          <li>@Html.ActionLink("聯絡我", "Contact", "Home")</li>
+          <li>@Html.ActionLink("联络我", "Contact", "Home")</li>
         </ul>
         @Html.Partial("_LoginPartial")
       </div>
@@ -49,7 +49,7 @@
     @RenderBody()
     <hr />
     <footer>
-      <p>&copy; @DateTime.Now.Year - 落磯山設備生命管理平台</p>
+      <p>&copy; @DateTime.Now.Year - 落矶山设备生命管理平台</p>
     </footer>
   </div>
 
@@ -58,3 +58,4 @@
   @RenderSection("scripts", required: false)
 </body>
 </html>
+

@@ -36,7 +36,7 @@ namespace MVC5
         //Here we create a Admin super user who will maintain the website				
 
         var user = new ApplicationUser();
-        user.UserName = "admin@gmail.com";
+        user.UserName = "admin";
         user.Email = "admin@gmail.com";
         user.IsEnabled = true;
         string userPWD = "wdy2fv";

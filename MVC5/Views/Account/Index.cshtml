@@ -2,32 +2,38 @@
 @{
   ViewBag.Title = "Edit User";
 }
-<h2>帳戶管理</h2>
-<table class="table">
-  <tr>
-    <th>
-      @Html.DisplayNameFor(model => model.IsEnabled)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.UserName)
-    </th>
-  </tr>
-
-  @foreach (var item in Model)
-  {
+<h2>账户管理</h2>
+<table class="table table-bordered table-condensed table-striped table-hover">
+  <thead>
     <tr>
-      <td>
-        @Html.DisplayFor(modelItem => item.IsEnabled)
-      </td>
-      <td>
-        @Html.DisplayFor(modelItem => item.UserName)
-      </td>
-      <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-      </td>
+      <th>
+        启用?
+      </th>
+      <th>
+        账户名称
+      </th>
+      <th>
+        操作
+      </th>
     </tr>
-  }
+  </thead>
+  <tbody>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td>
+          @Html.DisplayFor(modelItem => item.IsEnabled)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+          @Html.ActionLink("编辑", "Edit", new { id = item.Id })
+        </td>
+      </tr>
 
+    }
+    </tbody>
 </table>
 
 

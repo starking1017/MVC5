@@ -17,43 +17,43 @@ namespace MVC5.Models
     [Required]
     public int ID { get; set; }
 
-    [DisplayName("設備編號")]
+    [DisplayName("设备编号")]
     [Required]
     public int DeviceId { get; set; }
 
-    [DisplayName("設備名稱")]
+    [DisplayName("设备名称")]
     [StringLength(100)]
     [Required]
     public string Name { get; set; }
 
-    [DisplayName("設備類別")]
+    [DisplayName("设备类别")]
     [StringLength(100)]
     public string Type { get; set; }
 
-    [DisplayName("設備廠商")]
+    [DisplayName("设备厂商")]
     [StringLength(100)]
     public string Factory { get; set; }
 
-    [DisplayName("設備模型")]
+    [DisplayName("设备模型")]
     [StringLength(100)]
     public string Model { get; set; }
 
-    [DisplayName("設備數量")]
+    [DisplayName("设备数量")]
     public int Amount { get; set; }
 
-    [DisplayName("設備說明")]
-    [StringLength(10)]
+    [DisplayName("设备说明")]
+    [StringLength(100)]
     public string Description { get; set; }
 
-    [DisplayName("維護頻率 (x次 / 每年)")]
+    [DisplayName("维护频率 (x次 / 每年)")]
     public double MaintainFrequency { get; set; }
 
-    [DisplayName("更換/翻新綜合成本(每台)")]
+    [DisplayName("更换/翻新综合成本(每台)")]
     public int ReplaceFee { get; set; }
 
-    [DisplayName("設備最大可能年限")]
+    [DisplayName("设备最大可能年限")]
     public int MaxUsedYear { get; set; }
-    
+
     public virtual ApplicationUser ApplicationUser { get; set; }
   }
 }

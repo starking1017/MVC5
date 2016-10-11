@@ -5,11 +5,11 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>生命管理選單</h2>
+<h2>生命管理选单</h2>
 
 <div>
   <hr />
-  <div class="col-lg-4">
+  <div class="col-md-4">
     <dl class="dl-horizontal">
       <dt>
         @Html.DisplayNameFor(model => model.DeviceId)
@@ -92,18 +92,20 @@
       </dd>
     </dl>
   </div>
-  <div class="col-lg-4 btn-group-vertical btn-group-lg col-lg-offset-4">
-    <input type="submit" class="btn btn-primary" value="衰老曲線" onclick="location.href='@Url.Action("AgingCurve", "Devices", new { id = Model.ID })'">
+  <div class="col-md-3 btn-group-vertical btn-group-md col-md-offset-5">
+    <input type="submit" class="btn btn-primary" value="衰老曲线" onclick="location.href='@Url.Action("AgingCurve", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="故障預測" onclick="location.href='@Url.Action("FaultPrediction", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="故障预测" onclick="location.href='@Url.Action("FaultPrediction", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="風險挖掘" onclick="location.href='@Url.Action("RiskMining", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="风险挖掘" onclick="location.href='@Url.Action("RiskMining", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="最優更換年齡" onclick="location.href='@Url.Action("OptReplaceage", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="最优更换年龄" onclick="location.href='@Url.Action("OptReplaceage", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="長期投資優化" onclick="location.href='@Url.Action("LongtermInvestmentOpt", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="长期投资优化" onclick="location.href='@Url.Action("LongtermInvestmentOpt", "Devices", new { id = Model.ID })'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="雲比較" onclick="location.href='@Url.Action("CloudComparison", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="云比较" onclick="location.href='@Url.Action("CloudComparison", "Devices", new { id = Model.ID })'">
+    <p></p>
+    <input type="submit" class="btn btn-primary" value="报警决策" onclick="location.href='@Url.Action("AlarmDecision", "Devices", new { id = Model.ID })'">
     <p></p>
   </div>
   <div class="row"></div>

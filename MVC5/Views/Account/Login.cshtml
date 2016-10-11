@@ -14,10 +14,10 @@
         <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
-                  @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                  @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
                   <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
                   </div>
                 </div>
                 <div class="form-group">
@@ -37,14 +37,14 @@
                 </div>
                 <div class="form-group">
                   <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Log in" class="btn btn-default" />
+                    <input type="submit" value="登入" class="btn btn-default" />
                   </div>
                 </div>
                 <p>
-                  @Html.ActionLink("建立帳號", "Register")
+                  @Html.ActionLink("建立账号", "Register")
                 </p>
                 @*<p>
-                  @Html.ActionLink("後臺管理", "ManagerAccountLogin")
+                  @Html.ActionLink("后台管理", "ManagerAccountLogin")
                 </p>*@
                 @* Enable this once you have account confirmation enabled for password reset functionality
                   <p>

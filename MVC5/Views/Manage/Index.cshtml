@@ -1,21 +1,22 @@
-﻿@model MVC5.Models.IndexViewModel
+﻿
+@model MVC5.Models.IndexViewModel
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "管理";
 }
 
 <h2>@ViewBag.Title.</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Change your account settings</h4>
+    <h4>变更密码设定</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>Password:</dt>
+        <dt>密码:</dt>
         <dd>
             [
             @if (Model.HasPassword)
             {
-                @Html.ActionLink("Change your password", "ChangePassword")
+                @Html.ActionLink("变更密码", "ChangePassword")
             }
             else
             {
@@ -85,3 +86,4 @@
         @*</dd>*@
     </dl>
 </div>
+

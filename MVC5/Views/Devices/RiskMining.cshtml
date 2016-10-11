@@ -8,22 +8,22 @@
 @*header*@
 <div class="row">
   <div class="col-sm-4">
-    <h2>風險挖掘</h2>
+    <h2>风险挖掘</h2>
 
   </div>
   <div>
-    <input type="button" class="btn btn-primary pull-right" value="回生命管理選單"
+    <input type="button" class="btn btn-primary pull-right" value="回生命管理选单"
            onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
   </div>
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading">風險挖掘</div>
+  <div class="panel-heading">风险挖掘</div>
   <div class="panel-body">
     <img src="~/temp/@ViewBag.name" alt="" />
     <p></p>
     <form>
-      <label>當一台設備突然報廢後，其所造成的金錢損失為(元):</label>
+      <label>当一台设备突然报废后，其所造成的金钱损失为(元):</label>
       <div class="form-group">
         <div class="form-inline">
           <label>最大</label>
@@ -57,13 +57,13 @@
           <input class="form-control" type="text" placeholder="8000" />
         </div>
       </div>
-              <button type="submit" class="btn btn-success">生成曲線</button>
+              <button type="submit" class="btn btn-success">生成曲线</button>
 
     </form>
 
 
     <div class="box">
-      <h4>上傳設備-風險</h4>
+      <h4>上传设备-风险</h4>
     </div>
     <div class="row">
       <div class="col-lg-8">
@@ -80,11 +80,11 @@
 
     <ul>
       <li>
-        以下功能要求您在設備信息頁面上傳設備安裝年份表
+        以下功能要求您在设备信息页面上传设备安装年份表
       </li>
     </ul>
     <div class="form-inline">
-      <label>預測到</label>
+      <label>预测到</label>
       <select class="form-control">
         @for (int i = 0; i < 50; ++i)
         {
@@ -93,12 +93,12 @@
         }
       </select>
       <label>
-        年以前，您的xxx報廢數量將為N台
+        年以前，您的xxx报废数量将为N台
       </label>
     </div>
 
     <p></p>
-    <input type="button" class="btn btn-success" value="詳細設備報廢率報告" />
+    <input type="button" class="btn btn-success" value="详细设备报废率报告" />
 
   </div>
 </div>

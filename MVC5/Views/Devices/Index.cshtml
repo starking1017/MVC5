@@ -5,10 +5,10 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>設備列表</h2>
+<h2>设备列表</h2>
 
 <p>
-  @Html.ActionLink("增加設備", "Create")
+  @Html.ActionLink("增加设备", "Create")
 </p>
 <table class="table table-striped table-hover">
   <tr class="info">
@@ -83,10 +83,11 @@
         @*@Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
         @Html.ActionLink("Delete", "Delete", new { id = item.ID })
         <p>
-          @Html.ActionLink("生命管理選單", "LifeManageMenu", new { id = item.ID })
+          @Html.ActionLink("生命管理选单", "LifeManageMenu", new { id = item.ID })
         </p>
       </td>
     </tr>
   }
 
 </table>
+

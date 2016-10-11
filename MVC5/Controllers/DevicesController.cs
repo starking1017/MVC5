@@ -246,5 +246,10 @@ namespace MVC5.Controllers
       Device device = await db.Devices.FindAsync(id);
       return View("CloudComparison", device);
     }
+    public async Task<ActionResult> AlarmDecision(int id)
+    {
+      Device device = await db.Devices.FindAsync(id);
+      return View("AlarmDecision", device);
+    }
   }
 }

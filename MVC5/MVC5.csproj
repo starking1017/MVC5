@@ -1035,6 +1035,7 @@
     <Content Include="Views\Devices\OptReplaceage3.cshtml" />
     <Content Include="Views\Devices\LongtermInvestmentOpt.cshtml" />
     <Content Include="Views\Devices\CloudComparison.cshtml" />
+    <Content Include="Views\Devices\AlarmDecision.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
