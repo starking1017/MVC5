@@ -5,7 +5,7 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit Device</h2>
+<h2>编辑设备</h2>
 
 
 @using (Html.BeginForm())
@@ -17,13 +17,13 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ID)
 
-    <div class="form-group">
-      @Html.LabelFor(model => model.DeviceId, htmlAttributes: new { @class = "control-label col-md-2" })
-      <div class="col-md-10">
-        @Html.EditorFor(model => model.DeviceId, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.DeviceId, "", new { @class = "text-danger" })
-      </div>
-    </div>
+    @*    <div class="form-group">*@
+    @*      @Html.LabelFor(model => model.DeviceId, htmlAttributes: new { @class = "control-label col-md-2" })*@
+    @*      <div class="col-md-10">*@
+    @*        @Html.EditorFor(model => model.DeviceId, new { htmlAttributes = new { @class = "form-control" } })*@
+    @*        @Html.ValidationMessageFor(model => model.DeviceId, "", new { @class = "text-danger" })*@
+    @*      </div>*@
+    @*    </div>*@
 
     <div class="form-group">
       @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -96,31 +96,49 @@
         @Html.ValidationMessageFor(model => model.MaxUsedYear, "", new { @class = "text-danger" })
       </div>
     </div>
-
+    
     <div class="form-group">
-      <div class="col-md-offset-2 col-md-10">
-        <input type="submit" value="Save" class="btn btn-default" />
+      @Html.LabelFor(model => model.DeviceList, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+          @Html.DisplayFor(model => model.DeviceList, new { htmlAttributes = new { @class = "form-control" } })
       </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="demo-section k-content">
+        @*      @(Html.Kendo().Upload()*@
+        @*        .Name("files")*@
+        @*        .Messages(m => m.Select("上传设备ID - 安装年份列表..."))*@
+        @*        .Multiple(false)*@
+        @*        .HtmlAttributes(new { accept = ".xls, xlsx" })*@
+        @*        .HtmlAttributes(new { accept = ".csv" })*@
+        @*        .HtmlAttributes(new { accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })*@
+        @*        .Async(a => a*@
+        @*        .Save("Save", "Devices",new { Deviceid = Model.ID })*@
+        @*        .Remove("Remove", "Devices")*@
+        @*        .SaveField("files"))*@
+        @*      )*@
+      
+        @(Html.Kendo().Upload()
+            .Name("attachments")
+            .HtmlAttributes(new { accept = ".xls, xlsx" })
+            .HtmlAttributes(new { accept = ".csv" })
+            .HtmlAttributes(new { accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+            .Messages(m => m.Select("上传设备ID - 安装年份列表..."))
+            .Multiple(false)
+            )
+      </div>
+      <div class="form-group">
+      <p style="padding-top: 1em; text-align: right;">
+      <input type="submit" value="储存" class="btn btn-primary minwidth100" />
+    </p>
+    </div>
     </div>
   </div>
 }
 
-<div class="box">
-  <h4>上传设备ID-安装年份表格</h4>
-</div>
-<div class="row">
-  <div class="col-md-8">
-    <div class="demo-section k-content">
-      @(Html.Kendo().Upload()
-        .Name("files")
-        .Async(a => a
-          .Save("Save", "Devices")
-          .Remove("Remove", "Devices")
-          .SaveField("files"))
-      )
-    </div>
-  </div>
-</div>
 <p></p>
 <div>
   @Html.ActionLink("返回列表", "Index")

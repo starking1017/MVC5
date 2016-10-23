@@ -9,15 +9,15 @@
 
 <div>
   <hr />
-  <div class="col-md-4">
+  <div class="col-md-8">
     <dl class="dl-horizontal">
-      <dt>
-        @Html.DisplayNameFor(model => model.DeviceId)
-      </dt>
-
-      <dd>
-        @Html.DisplayFor(model => model.DeviceId)
-      </dd>
+      @*      <dt>*@
+      @*        @Html.DisplayNameFor(model => model.DeviceId)*@
+      @*      </dt>*@
+      @**@
+      @*      <dd>*@
+      @*        @Html.DisplayFor(model => model.DeviceId)*@
+      @*      </dd>*@
 
       <dt>
         @Html.DisplayNameFor(model => model.Name)
@@ -90,22 +90,45 @@
       <dd>
         @Html.DisplayFor(model => model.MaxUsedYear)
       </dd>
+
+      <dt>
+        @Html.DisplayNameFor(model => model.DeviceList)
+      </dt>
+
+      <dd>
+        @Html.DisplayFor(model => model.DeviceList)
+      </dd>
     </dl>
+    <div class="demo-section k-content">
+      @(Html.Kendo().Upload()
+          .Name("files")
+          .Messages(m => m.Select("上传设备ID - 安装年份列表..."))
+          .Multiple(false)
+          .HtmlAttributes(new { accept = ".xls, xlsx" })
+          .HtmlAttributes(new { accept = ".csv" })
+          .HtmlAttributes(new { accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+          .Async(a => a
+          .Save("Save", "Devices", new { id = Model.ID })
+          //.Remove("Remove", "Devices")
+          .SaveField("files"))
+      )
+    </div>
   </div>
-  <div class="col-md-3 btn-group-vertical btn-group-md col-md-offset-5">
-    <input type="submit" class="btn btn-primary" value="衰老曲线" onclick="location.href='@Url.Action("AgingCurve", "Devices", new { id = Model.ID })'">
+
+  <div class="col-md-3 btn-group-vertical btn-group-md col-md-offset-1">
+    <button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("AgingCurve", "Devices", new {id = Model.ID})'">衰老曲線</button>
     <p></p>
-    <input type="submit" class="btn btn-primary" value="故障预测" onclick="location.href='@Url.Action("FaultPrediction", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="故障预测" onclick="location.href = '@Url.Action("FaultPrediction", "Devices", new {id = Model.ID})'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="风险挖掘" onclick="location.href='@Url.Action("RiskMining", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="风险挖掘" onclick="location.href = '@Url.Action("RiskMining", "Devices", new {id = Model.ID})'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="最优更换年龄" onclick="location.href='@Url.Action("OptReplaceage", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="最优更换年龄" onclick="location.href = '@Url.Action("OptReplaceage", "Devices", new {id = Model.ID})'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="长期投资优化" onclick="location.href='@Url.Action("LongtermInvestmentOpt", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="长期投资优化" onclick="location.href = '@Url.Action("LongtermInvestmentOpt", "Devices", new {id = Model.ID})'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="云比较" onclick="location.href='@Url.Action("CloudComparison", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="云比较" onclick="location.href = '@Url.Action("CloudComparison", "Devices", new {id = Model.ID})'">
     <p></p>
-    <input type="submit" class="btn btn-primary" value="报警决策" onclick="location.href='@Url.Action("AlarmDecision", "Devices", new { id = Model.ID })'">
+    <input type="submit" class="btn btn-primary" value="报警决策" onclick="location.href = '@Url.Action("AlarmDecision", "Devices", new {id = Model.ID})'">
     <p></p>
   </div>
   <div class="row"></div>

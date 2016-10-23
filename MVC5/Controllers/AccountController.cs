@@ -20,11 +20,11 @@ namespace MVC5.Controllers
   {
     private ApplicationSignInManager _signInManager;
     private ApplicationUserManager _userManager;
-    ApplicationDbContext AppDBcontext;
+    private readonly ApplicationDbContext _dbContext;
 
     public AccountController()
     {
-      AppDBcontext = new ApplicationDbContext();
+      _dbContext = new ApplicationDbContext();
     }
 
     public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -66,17 +66,17 @@ namespace MVC5.Controllers
       {
         ViewBag.displayMenu = "No";
 
-        if (isAdminUser())
+        if (IsAdminUser())
         {
           ViewBag.displayMenu = "Yes";
         }
       }
       else
       {
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Devices");
       }
 
-      var user = AppDBcontext.Users.ToList();
+      var user = _dbContext.Users.ToList();
       return View(user);
     }
 
@@ -88,7 +88,7 @@ namespace MVC5.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      ApplicationUser user = AppDBcontext.Users.Find(id);
+      ApplicationUser user = _dbContext.Users.Find(id);
       if (user == null)
       {
         return HttpNotFound();
@@ -104,24 +104,24 @@ namespace MVC5.Controllers
     [ValidateAntiForgeryToken]
     public async Task<ActionResult> Edit([Bind(Include = "Id,IsEnabled,Email,EmailConfirm,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser user)
     {
-      ApplicationUser currentUser = AppDBcontext.Users.Find(user.Id);
+      ApplicationUser currentUser = _dbContext.Users.Find(user.Id);
       if (ModelState.IsValid)
       {
         currentUser.IsEnabled = user.IsEnabled;
-        AppDBcontext.Entry(currentUser).State = EntityState.Modified;
-        await AppDBcontext.SaveChangesAsync();
+        _dbContext.Entry(currentUser).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
         return RedirectToAction("Index");
       }
       return View(currentUser);
     }
 
-    public bool isAdminUser()
+    public bool IsAdminUser()
     {
       if (User.Identity.IsAuthenticated)
       {
         var user = User.Identity;
-        var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(AppDBcontext));
-        var s = UserManager.GetRoles(user.GetUserId());
+        var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+        var s = userManager.GetRoles(user.GetUserId());
         if (s.Count > 0)
         {
           if (s[0].ToString() == "Admin")
@@ -258,7 +258,7 @@ namespace MVC5.Controllers
         var result = await UserManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-          await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+          //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
           // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
           // Send an email with this link
@@ -266,7 +266,7 @@ namespace MVC5.Controllers
           // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
           // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-          return RedirectToAction("Index", "Home");
+          return RedirectToAction("Index", "Devices");
         }
         AddErrors(result);
       }
@@ -495,7 +495,7 @@ namespace MVC5.Controllers
     public ActionResult LogOff()
     {
       AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-      return RedirectToAction("Index", "Home");
+      return RedirectToAction("Index", "Devices");
     }
 
     //
@@ -552,7 +552,7 @@ namespace MVC5.Controllers
       {
         return Redirect(returnUrl);
       }
-      return RedirectToAction("Index", "Home");
+      return RedirectToAction("Index", "Devices");
     }
 
     internal class ChallengeResult : HttpUnauthorizedResult

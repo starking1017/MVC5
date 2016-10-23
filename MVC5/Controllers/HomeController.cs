@@ -20,7 +20,7 @@ namespace MVC5.Controllers
     {
       ViewBag.displayMenu = "No";
 
-      if (isAdminUser())
+      if (IsAdminUser())
       {
         ViewBag.displayMenu = "Yes";
       }
@@ -60,7 +60,7 @@ namespace MVC5.Controllers
       return View();
     }
 
-    public bool isAdminUser()
+    public bool IsAdminUser()
     {
       if (User.Identity.IsAuthenticated)
       {

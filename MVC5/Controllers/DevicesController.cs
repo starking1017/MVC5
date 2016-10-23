@@ -9,22 +9,38 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using MVC5.Models;
 
 namespace MVC5.Controllers
 {
   public class DevicesController : Controller
   {
-    private ApplicationDbContext db = new ApplicationDbContext();
+    private readonly ApplicationDbContext _dbContext;
 
+    public DevicesController()
+    {
+      _dbContext = new ApplicationDbContext();
+    }
+
+    #region BasicCRUD
     // GET: Devices
     [Authorize]
     public async Task<ActionResult> Index()
     {
-      string currentUserId = User.Identity.GetUserId();
-      ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+      if (User.Identity.IsAuthenticated)
+      {
+        ViewBag.displayMenu = "No";
 
-      var deviceLists = await db.Devices.ToListAsync();
+        if (IsAdminUser())
+        {
+          ViewBag.displayMenu = "Yes";
+        }
+      }
+      string currentUserId = User.Identity.GetUserId();
+      ApplicationUser currentUser = _dbContext.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+      var deviceLists = await _dbContext.Devices.ToListAsync();
       var list = deviceLists.Where(li => li.ApplicationUser == currentUser);
       return View(list);
     }
@@ -37,7 +53,7 @@ namespace MVC5.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       if (device == null)
       {
         return HttpNotFound();
@@ -52,9 +68,9 @@ namespace MVC5.Controllers
       return View();
     }
 
-    // POST: Devices/Create
-    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+    //// POST: Devices/Create
+    //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
@@ -63,14 +79,63 @@ namespace MVC5.Controllers
       if (ModelState.IsValid)
       {
         string currentUserId = User.Identity.GetUserId();
-        device.ApplicationUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-        db.Devices.Add(device);
+        device.ApplicationUser = _dbContext.Users.FirstOrDefault(x => x.Id == currentUserId);
+        _dbContext.Devices.Add(device);
 
-        await db.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
         return RedirectToAction("Index");
       }
 
       return View(device);
+    }
+    // POST: Devices/Create
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Create(
+      [Bind(Include = "ID,DeviceId,Name,Type,Factory,Model,Amount,Description,MaintainFrequency,ReplaceFee,MaxUsedYear")]
+      Device device, IEnumerable<HttpPostedFileBase> attachments)
+    {
+      if (ModelState.IsValid)
+      {
+        string currentUserId = User.Identity.GetUserId();
+        device.ApplicationUser = _dbContext.Users.FirstOrDefault(x => x.Id == currentUserId);
+        if (attachments != null)
+          device.DeviceList = true;
+        else
+          device.DeviceList = false;
+        _dbContext.Devices.Add(device);
+
+        await _dbContext.SaveChangesAsync();
+      }
+
+      if (attachments != null)
+      {
+        int id = _dbContext.Devices.Select(o => o.ID).Max();
+        foreach (var file in attachments)
+        {
+          var fileName = Path.GetFileName(file.FileName);
+          if (fileName != null)
+          {
+            // Create userid/deviceid folder
+            var destinationPath = Path.Combine(Server.MapPath("~/App_Data"),
+              User.Identity.GetUserName(), id.ToString());
+            if (!Directory.Exists(destinationPath))
+              Directory.CreateDirectory(destinationPath);
+
+            // Set fix filename for all upload file
+            var tempFileNames = "DeviceIdList" +
+                                fileName.Substring(fileName.IndexOf(".", StringComparison.Ordinal));
+            var destinationfilePath = Path.Combine(destinationPath, tempFileNames);
+
+            file.SaveAs(destinationfilePath);
+          }
+        }
+      }
+
+      return RedirectToAction("Index");
     }
 
     // GET: Devices/Edit/5
@@ -81,7 +146,7 @@ namespace MVC5.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       if (device == null)
       {
         return HttpNotFound();
@@ -95,12 +160,44 @@ namespace MVC5.Controllers
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Edit([Bind(Include = "ID,DeviceId,Name,Type,Factory,Model,Amount,Description,MaintainFrequency,ReplaceFee,MaxUsedYear")] Device device)
+    public async Task<ActionResult> Edit([Bind(Include = "ID,DeviceId,Name,Type,Factory,Model,Amount,Description,MaintainFrequency,ReplaceFee,MaxUsedYear,DeviceList")] Device device
+      , IEnumerable<HttpPostedFileBase> attachments)
     {
       if (ModelState.IsValid)
       {
-        db.Entry(device).State = EntityState.Modified;
-        await db.SaveChangesAsync();
+        _dbContext.Entry(device).State = EntityState.Modified;
+
+        // get upload file status and save to db
+        if (attachments != null)
+          device.DeviceList = true;
+        else
+          device.DeviceList = false;
+        await _dbContext.SaveChangesAsync();
+
+        // upload file to server
+        if (attachments != null)
+        {
+          int id = device.ID;
+          foreach (var file in attachments)
+          {
+            var fileName = Path.GetFileName(file.FileName);
+            if (fileName != null)
+            {
+              // Create userid/deviceid folder
+              var destinationPath = Path.Combine(Server.MapPath("~/App_Data"),
+                User.Identity.GetUserName(), id.ToString());
+              if (!Directory.Exists(destinationPath))
+                Directory.CreateDirectory(destinationPath);
+
+              // Set fix filename for all upload file
+              var tempFileNames = "DeviceIdList" +
+                                  fileName.Substring(fileName.IndexOf(".", StringComparison.Ordinal));
+              var destinationfilePath = Path.Combine(destinationPath, tempFileNames);
+
+              file.SaveAs(destinationfilePath);
+            }
+          }
+        }
       }
       return RedirectToAction("Index");
     }
@@ -113,7 +210,7 @@ namespace MVC5.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       if (device == null)
       {
         return HttpNotFound();
@@ -127,37 +224,66 @@ namespace MVC5.Controllers
     [Authorize]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
-      db.Devices.Remove(device);
-      await db.SaveChangesAsync();
+      // Delete db device info
+      Device device = await _dbContext.Devices.FindAsync(id);
+      _dbContext.Devices.Remove(device);
+      await _dbContext.SaveChangesAsync();
+
+      // Delete device related files
+      var destinationfilePath = Path.Combine(Server.MapPath("~/App_Data"),
+            User.Identity.GetUserName(), id.ToString());
+
+      if (Directory.Exists(destinationfilePath))
+        Directory.Delete(destinationfilePath, true);
+
       return RedirectToAction("Index");
     }
 
-    // GET: Devices/LifeManageMenu/5
-    [Authorize]
-    public async Task<ActionResult> LifeManageMenu(int? id)
+    protected override void Dispose(bool disposing)
     {
-      Device device = await db.Devices.FindAsync(id);
-      return View("LifeManageMenu",device);
+      if (disposing)
+      {
+        _dbContext.Dispose();
+      }
+      base.Dispose(disposing);
     }
 
-    public ActionResult Save(IEnumerable<HttpPostedFileBase> files)
+    #endregion
+
+    #region AsyncFilesUpload
+    public async Task<ActionResult> Save(IEnumerable<HttpPostedFileBase> files,
+      int id)
     {
       // The Name of the Upload component is "files"
       if (files != null)
       {
+        // Save upload status to db
+        Device device = await _dbContext.Devices.FindAsync(id);
+        device.DeviceList = true;
+        await _dbContext.SaveChangesAsync();
+
         foreach (var file in files)
         {
           // Some browsers send file names with full path.
           // We are only interested in the file name.
           var fileName = Path.GetFileName(file.FileName);
-          var physicalPath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
+          if (fileName != null)
+          {
+            // Create userid/deviceid folder
+            var destinationPath = Path.Combine(Server.MapPath("~/App_Data"),
+              User.Identity.GetUserName(), id.ToString());
+            if (!Directory.Exists(destinationPath))
+              Directory.CreateDirectory(destinationPath);
 
-          // The files are not actually saved in this demo
-          file.SaveAs(physicalPath);
+            // Set fix filename for all upload file
+            var tempFileNames = "DeviceIdList" +
+                                fileName.Substring(fileName.IndexOf(".", StringComparison.Ordinal));
+            var destinationfilePath = Path.Combine(destinationPath, tempFileNames);
+
+            file.SaveAs(destinationfilePath);
+          }
         }
       }
-
       // Return an empty string to signify success
       return Content("");
     }
@@ -171,14 +297,17 @@ namespace MVC5.Controllers
         foreach (var fullName in fileNames)
         {
           var fileName = Path.GetFileName(fullName);
-          var physicalPath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
-
-          // TODO: Verify user permissions
-
-          if (System.IO.File.Exists(physicalPath))
+          if (fileName != null)
           {
-            // The files are not actually removed in this demo
-            System.IO.File.Delete(physicalPath);
+            var physicalPath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
+
+            // TODO: Verify user permissions
+
+            if (System.IO.File.Exists(physicalPath))
+            {
+              // The files are not actually removed in this demo
+              System.IO.File.Delete(physicalPath);
+            }
           }
         }
       }
@@ -187,69 +316,103 @@ namespace MVC5.Controllers
       return Content("");
     }
 
+    #endregion
 
-    protected override void Dispose(bool disposing)
+    #region LifeCycleManage
+    // GET: Devices/LifeManageMenu/5
+    [Authorize]
+    public async Task<ActionResult> LifeManageMenu(int? id)
     {
-      if (disposing)
-      {
-        db.Dispose();
-      }
-      base.Dispose(disposing);
+      Device device = await _dbContext.Devices.FindAsync(id);
+      return View("LifeManageMenu", device);
     }
 
     // GET: Devices/AgingCurve/5
     [Authorize]
     public async Task<ActionResult> AgingCurve(int? id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("AgingCurve", device);
     }
 
+    [Authorize]
     public async Task<ActionResult> FaultPrediction(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("FaultPrediction", device);
     }
 
+    [Authorize]
     public async Task<ActionResult> RiskMining(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("RiskMining", device);
     }
 
+    [Authorize]
     public async Task<ActionResult> OptReplaceage(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("OptReplaceage", device);
     }
 
+    [Authorize]
     public async Task<ActionResult> OptReplaceage2(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("OptReplaceage2", device);
     }
 
+    [Authorize]
     public async Task<ActionResult> OptReplaceage3(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("OptReplaceage3", device);
     }
 
+    [Authorize]
     public async Task<ActionResult> LongtermInvestmentOpt(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("LongtermInvestmentOpt", device);
     }
 
+    [Authorize]
     public async Task<ActionResult> CloudComparison(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("CloudComparison", device);
     }
+
+    [Authorize]
     public async Task<ActionResult> AlarmDecision(int id)
     {
-      Device device = await db.Devices.FindAsync(id);
+      Device device = await _dbContext.Devices.FindAsync(id);
       return View("AlarmDecision", device);
+    }
+
+    #endregion
+
+    public bool IsAdminUser()
+    {
+      if (User.Identity.IsAuthenticated)
+      {
+        var user = User.Identity;
+        var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+        var s = UserManager.GetRoles(user.GetUserId());
+        if (s.Count > 0)
+        {
+          if (s[0].ToString() == "Admin")
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
+        }
+      }
+      return false;
     }
   }
 }

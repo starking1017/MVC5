@@ -15,17 +15,17 @@
 .dl-horizontal dt {
   width: 250px;
   padding: 2px;
-  padding-right: 10px;
+  padding-right: 12px;
   white-space: normal;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .dl-horizontal dd {
-  padding-top: 5px;
+  padding-top: 3px;
   white-space: normal;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: bold;
-  color: forestgreen;
+  color: royalblue;
 }
 /* Set width on the form input elements since they're 100% wide by default */
 input,
@@ -34,6 +34,9 @@ textarea {
   max-width: 280px;
 }
 
+input.minwidth100 {
+  min-width: 100px;
+}
 div ul.padding_button10 {
   padding-bottom: 10px;
 }

@@ -18,7 +18,6 @@ namespace MVC5.Models
     public int ID { get; set; }
 
     [DisplayName("设备编号")]
-    [Required]
     public int DeviceId { get; set; }
 
     [DisplayName("设备名称")]
@@ -53,6 +52,9 @@ namespace MVC5.Models
 
     [DisplayName("设备最大可能年限")]
     public int MaxUsedYear { get; set; }
+
+    [DisplayName("上传年份列表")]
+    public bool DeviceList { get; set; }
 
     public virtual ApplicationUser ApplicationUser { get; set; }
   }

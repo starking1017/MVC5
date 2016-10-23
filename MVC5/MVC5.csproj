@@ -240,6 +240,18 @@
     <Compile Include="Migrations\201610032037318_addrole.Designer.cs">
       <DependentUpon>201610032037318_addrole.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610162011334_new.cs" />
+    <Compile Include="Migrations\201610162011334_new.Designer.cs">
+      <DependentUpon>201610162011334_new.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610170710128_remove_deviceID.cs" />
+    <Compile Include="Migrations\201610170710128_remove_deviceID.Designer.cs">
+      <DependentUpon>201610170710128_remove_deviceID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610230453036_adddevicelistfield.cs" />
+    <Compile Include="Migrations\201610230453036_adddevicelistfield.Designer.cs">
+      <DependentUpon>201610230453036_adddevicelistfield.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -1062,6 +1074,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610032037318_addrole.resx">
       <DependentUpon>201610032037318_addrole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610162011334_new.resx">
+      <DependentUpon>201610162011334_new.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610170710128_remove_deviceID.resx">
+      <DependentUpon>201610170710128_remove_deviceID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610230453036_adddevicelistfield.resx">
+      <DependentUpon>201610230453036_adddevicelistfield.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
