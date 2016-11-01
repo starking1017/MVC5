@@ -118,9 +118,9 @@
   <div class="col-md-3 btn-group-vertical btn-group-md col-md-offset-1">
     <button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("AgingCurve", "Devices", new {id = Model.ID})'">衰老曲線</button>
     <p></p>
-    <input type="submit" class="btn btn-primary" value="故障预测" onclick="location.href = '@Url.Action("FaultPrediction", "Devices", new {id = Model.ID})'">
+    <button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("FaultPrediction", "Devices", new {id = Model.ID})'">故障预测</button>
     <p></p>
-    <input type="submit" class="btn btn-primary" value="风险挖掘" onclick="location.href = '@Url.Action("RiskMining", "Devices", new {id = Model.ID})'">
+    <button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("RiskMining", "Devices", new {id = Model.ID})'">风险挖掘</button>
     <p></p>
     <input type="submit" class="btn btn-primary" value="最优更换年龄" onclick="location.href = '@Url.Action("OptReplaceage", "Devices", new {id = Model.ID})'">
     <p></p>

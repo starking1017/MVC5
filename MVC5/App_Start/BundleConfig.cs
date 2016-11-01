@@ -31,11 +31,11 @@ namespace MVC5
                       "~/Content/bootstrap.css",
                       "~/Content/kendo.bootstrap.min.css",
                       "~/Content/kendo.common-bootstrap.min",
-                      "~/Content/kendo/2016.3.914/kendo.common.min.css",
-                      "~/Content/kendo/2016.3.914/kendo.mobile.all.min.css",
-                      "~/Content/kendo/2016.3.914/kendo.dataviz.min.css",
-                      "~/Content/kendo/2016.3.914/kendo.default.min.css",
-                      "~/Content/kendo/2016.3.914/kendo.dataviz.default.min.css",
+                      "~/Content/kendo/2016.3.1028/kendo.common.min.css",
+                      "~/Content/kendo/2016.3.1028/kendo.mobile.all.min.css",
+                      "~/Content/kendo/2016.3.1028/kendo.dataviz.min.css",
+                      "~/Content/kendo/2016.3.1028/kendo.default.min.css",
+                      "~/Content/kendo/2016.3.1028/kendo.dataviz.default.min.css",
                       "~/Content/site.css"));
         }
     }

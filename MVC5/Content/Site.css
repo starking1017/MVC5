@@ -3,6 +3,11 @@
   padding-bottom: 20px;
 }
 
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 /* Set padding to keep content from hitting the edges */
 .body-content {
   padding-left: 15px;
@@ -34,9 +39,10 @@ textarea {
   max-width: 280px;
 }
 
-input.minwidth100 {
-  min-width: 100px;
-}
+  input.minwidth100 {
+    min-width: 100px;
+  }
+
 div ul.padding_button10 {
   padding-bottom: 10px;
 }

@@ -1,0 +1,25 @@
+CRA帳號
+
+starking1017
+7Giaw7x9
+
+1.mother middle
+Liu
+
+2.father middle
+Chang
+
+3.holiday destination
+Canada
+
+4.city or town father born
+Taiwan
+
+5.Favourite sport
+Baseball
+
+
+String path;
+            path = Environment.CurrentDirectory + @"\Say for A Moment Help.chm";
+            //appControl.ExeName = "notepad.exe";
+            ProcessStartInfo startInfo = new ProcessStartInfo(path);

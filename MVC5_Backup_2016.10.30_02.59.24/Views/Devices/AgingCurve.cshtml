@@ -1,0 +1,142 @@
+﻿@model MVC5.Models.Device
+
+@{
+  ViewBag.Title = "title";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*header*@
+<div class="row">
+  <div class="col-sm-4">
+    <h2>衰老曲线</h2>
+
+  </div>
+  <div>
+    <input type="button" class="btn btn-primary pull-right" value="回生命管理选单"
+           onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
+
+
+  </div>
+</div>
+
+@*Body*@
+<div class="panel panel-default">
+  <div class="panel-heading">数据上传</div>
+  <div class="panel-body">
+    <ul>
+      <li>
+        按以下例子中的格式上传历史设备报废数据。上传后点击生成衰老曲线。纪录越多，结果越精确。更多信息请参考用户手册或技术咨询我们。
+      </li>
+      <li>
+        在下面的例子中，某设备业主持续跟踪了6台同型号电力变压器8年。其中四台中煎出故障报废，另外两台持续运行至今。
+      </li>
+    </ul>
+    <p></p>
+    <div class="row">
+      <div class="col-sm-4">
+        <table class="table table-bordered table-striped table-condensed">
+          <thead class="bg-success">
+            <tr>
+              <td>ID</td>
+              <td>持续运行年龄</td>
+              <td>报废年龄</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td></td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td></td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td></td>
+              <td>6</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td></td>
+              <td>6</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>8</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>8</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p></p>
+    <div>
+      <div class="demo-section k-content">
+        @(Html.Kendo().Upload()
+            .Name("files")
+            .HtmlAttributes(new { accept = ".xls, xlsx" })
+            .HtmlAttributes(new { accept = ".csv" })
+            .HtmlAttributes(new { accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+            .Async(a => a
+              .SaveField("files"))
+            .Messages(m => m.Select("上传表格..."))
+            .Async(a => a
+              .Save("SaveDeviceFailure", "Upload", new { id = Model.ID }))
+        //              .Remove("RemoveDeviceFailure", "Upload"))
+        )
+      </div>
+      <p></p>
+      <input type="button" class="btn btn-success" value="生成曲线"
+             onclick="location.href='@Url.Action("GenerateAgingCurve", "Devices", new { id = Model.ID })'" />
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">头脑风暴</h3>
+  </div>
+  <div class="panel-body">
+    <ul class="padding_button10">
+      <li>
+        如果没有历史失败数据，请和您的设备管理小组讨论，根据经验填写以下问题的答案，如果不确定请留空。
+      </li>
+    </ul>
+    @using (Html.BeginForm("GenerateAgingCurveByInput", "Devices", FormMethod.Post, new { id = Model.ID })){
+    <div class="form-group">
+      <label>问题1:根据经验，百分之多少的xxx(设备名)，可以运行超过N年，最大年限的25%</label>
+      <p></p>
+      <label for="input1" class="control-label">答案1:</label>
+      <input type="text" class="form-control" id="input1" placeholder="0">
+    </div>
+    <div class="form-group">
+      <label>问题2:根据经验，百分之多少的xxx(设备名)，可以运行超过N年，最大年限的50%</label>
+      <p></p>
+      <label for="input2" class="control-label">答案2:</label>
+      <input type="text" class="form-control" id="input2" placeholder="0">
+    </div>
+    <div class="form-group">
+      <label>问题3:根据经验，百分之多少的xxx(设备名)，可以运行超过N年，最大年限的75%</label>
+      <p></p>
+      <label for="input3" class="control-label">答案3:</label>
+      <input type="text" class="form-control" id="input3" placeholder="0">
+    </div>
+    <div class="form-group">
+      <label>问题4:根据经验，设备超过多少年肯定会报废。</label>
+      <p></p>
+      <label for="input4" class="control-label">答案4:</label>
+      <input type="text" class="form-control" id="input4" placeholder="0">
+    </div>
+    <input type="submit" class="btn btn-success" value="生成曲线" />
+    }
+  </div>
+</div>

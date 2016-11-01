@@ -1,0 +1,106 @@
+﻿@model MVC5.Models.Device
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>删除设备</h2>
+
+<h3>是否确定要删除这个设备?</h3>
+<div>
+    <h4></h4>
+    <hr />
+    <dl class="dl-horizontal">
+@*        <dt>*@
+@*            @Html.DisplayNameFor(model => model.DeviceId)*@
+@*        </dt>*@
+@**@
+@*        <dd>*@
+@*            @Html.DisplayFor(model => model.DeviceId)*@
+@*        </dd>*@
+@**@
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Factory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Factory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Model)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaintainFrequency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaintainFrequency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReplaceFee)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReplaceFee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxUsedYear)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaxUsedYear)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("返回列表", "Index")
+        </div>
+    }
+</div>
+

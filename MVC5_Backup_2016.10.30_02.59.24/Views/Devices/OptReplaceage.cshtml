@@ -1,0 +1,35 @@
+﻿@model MVC5.Models.Device
+
+@{
+  ViewBag.Title = "title";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*header*@
+<div class="row">
+  <div class="col-sm-4">
+    <h2>最优更换年龄-1</h2>
+
+  </div>
+  <div>
+    <input type="button" class="btn btn-primary pull-right" value="回生命管理选单"
+           onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">最优更换年龄-1</div>
+  <div class="panel-body">
+    <label>根据以上提供的信息，xxx的最佳更换年龄是N岁</label>
+    <p></p>
+    <img src="~/temp/@ViewBag.name" alt="" />
+    <p></p>
+    <div class="form-inline">
+      <label>提前/延迟到</label>
+      <input type="text" class="form-control" placeholder="10000"/>
+      <label>年</label>
+    </div>
+    <p></p>
+    <button class="btn btn-success" type="button">显示拥有成本变化</button>
+  </div>
+</div>

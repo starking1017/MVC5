@@ -120,7 +120,7 @@ namespace MVC5.Controllers
           if (fileName != null)
           {
             // Create userid/deviceid folder
-            var destinationPath = Path.Combine(Server.MapPath("~/App_Data"),
+            var destinationPath = Path.Combine(Server.MapPath("~/users"),
               User.Identity.GetUserName(), id.ToString());
             if (!Directory.Exists(destinationPath))
               Directory.CreateDirectory(destinationPath);
@@ -184,7 +184,7 @@ namespace MVC5.Controllers
             if (fileName != null)
             {
               // Create userid/deviceid folder
-              var destinationPath = Path.Combine(Server.MapPath("~/App_Data"),
+              var destinationPath = Path.Combine(Server.MapPath("~/users"),
                 User.Identity.GetUserName(), id.ToString());
               if (!Directory.Exists(destinationPath))
                 Directory.CreateDirectory(destinationPath);
@@ -230,7 +230,7 @@ namespace MVC5.Controllers
       await _dbContext.SaveChangesAsync();
 
       // Delete device related files
-      var destinationfilePath = Path.Combine(Server.MapPath("~/App_Data"),
+      var destinationfilePath = Path.Combine(Server.MapPath("~/users"),
             User.Identity.GetUserName(), id.ToString());
 
       if (Directory.Exists(destinationfilePath))
@@ -270,7 +270,7 @@ namespace MVC5.Controllers
           if (fileName != null)
           {
             // Create userid/deviceid folder
-            var destinationPath = Path.Combine(Server.MapPath("~/App_Data"),
+            var destinationPath = Path.Combine(Server.MapPath("~/users"),
               User.Identity.GetUserName(), id.ToString());
             if (!Directory.Exists(destinationPath))
               Directory.CreateDirectory(destinationPath);
@@ -299,7 +299,7 @@ namespace MVC5.Controllers
           var fileName = Path.GetFileName(fullName);
           if (fileName != null)
           {
-            var physicalPath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
+            var physicalPath = Path.Combine(Server.MapPath("~/users"), fileName);
 
             // TODO: Verify user permissions
 
@@ -336,12 +336,123 @@ namespace MVC5.Controllers
     }
 
     [Authorize]
-    public async Task<ActionResult> FaultPrediction(int id)
+    public async Task<ActionResult> GenerateAgingCurve(int? id)
     {
       Device device = await _dbContext.Devices.FindAsync(id);
+      ViewBag.name = "degradation.jpg";
+
+      System.Diagnostics.Process pExecuteEXE = new System.Diagnostics.Process();
+      pExecuteEXE.StartInfo.FileName = HttpRuntime.AppDomainAppPath + "temp\\Degradation1.exe";
+      pExecuteEXE.StartInfo.WorkingDirectory = HttpRuntime.AppDomainAppPath + "temp\\";
+      pExecuteEXE.StartInfo.Arguments = User.Identity.GetUserName() + " " + id.ToString() + " " +
+                                        device.MaxUsedYear;
+      pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.Start();
+
+      pExecuteEXE.WaitForExit();
       return View("FaultPrediction", device);
     }
 
+    [Authorize]
+    [HttpPost]
+    public async Task<ActionResult> GenerateAgingCurveByInput(FormCollection form)
+    {
+      var id = int.Parse(form["id"].ToString());
+
+      Device device = await _dbContext.Devices.FindAsync(id);
+      ViewBag.name = "degradation.jpg";
+
+
+      var input1 = form["input1"] == "" ? 0 : int.Parse(form["input1"].ToString());
+      var input2 = form["input2"] == "" ? 0 : int.Parse(form["input2"].ToString());
+      var input3 = form["input3"] == "" ? 0 : int.Parse(form["input3"].ToString());
+      var input4 = form["input4"] == "" ? 0 : int.Parse(form["input4"].ToString());
+
+
+      System.Diagnostics.Process pExecuteEXE = new System.Diagnostics.Process();
+      pExecuteEXE.StartInfo.FileName = HttpRuntime.AppDomainAppPath + "exes\\Degradation2.exe";
+      pExecuteEXE.StartInfo.WorkingDirectory = HttpRuntime.AppDomainAppPath + "exes\\";
+      pExecuteEXE.StartInfo.Arguments = User.Identity.GetUserName() + " " +
+                                        id.ToString() + " " +
+                                        device.MaxUsedYear + " " +
+                                        input1 + " " +
+                                        input2 + " " +
+                                        input3 + " " +
+                                        input4 + " ";
+      pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.Start();
+
+      pExecuteEXE.WaitForExit();
+
+      // check failureforecast.csv
+      string failureforecastFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "failureforecast.csv";
+      var failureforecast = new Dictionary<string, string>();
+      if (System.IO.File.Exists(failureforecastFileName))
+      {
+        using (StreamReader SR = new StreamReader(failureforecastFileName))
+        {
+          string Line;
+          while ((Line = SR.ReadLine()) != null)
+          {
+            var ReadLine_Array = Line.Split(',');
+            if (ReadLine_Array.Length == 2)
+              failureforecast.Add(ReadLine_Array[0], ReadLine_Array[1]);
+          }
+        }
+      }
+      @ViewBag.name = "degradation.jpg";
+      @ViewBag.failureforecast = failureforecast;
+      return View("FaultPrediction", device);
+
+    }
+
+
+    [Authorize]
+    public async Task<ActionResult> FaultPrediction(int? id)
+    {
+      Device device = await _dbContext.Devices.FindAsync(id);
+
+      // check failureforecast.csv
+      string failureforecastFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "failureforecast.csv";
+      var failureforecast = new Dictionary<string, string>();
+      if (System.IO.File.Exists(failureforecastFileName))
+      {
+        using (StreamReader SR = new StreamReader(failureforecastFileName))
+        {
+          string Line;
+          while ((Line = SR.ReadLine()) != null)
+          {
+            var ReadLine_Array = Line.Split(',');
+            if (ReadLine_Array.Length == 2)
+              failureforecast.Add(ReadLine_Array[0], ReadLine_Array[1]);
+          }
+        }
+      }
+      @ViewBag.name = "degradation.jpg";
+      @ViewBag.failureforecast = failureforecast;
+      return View("FaultPrediction", device);
+    }
+
+    public ActionResult DownloadFailureForecast(int id)
+    {
+      string FileName = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        id.ToString() + "\\" + "failureforecast.csv";
+      if (System.IO.File.Exists(FileName))
+      {
+        Stream iStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+        return File(iStream, "application/unknown", "failureforecast.csv");
+      }
+      else
+      {
+        ViewBag.error = "no file exist.";
+        return Content("");
+      }
+    }
     [Authorize]
     public async Task<ActionResult> RiskMining(int id)
     {
@@ -414,5 +525,6 @@ namespace MVC5.Controllers
       }
       return false;
     }
+
   }
 }

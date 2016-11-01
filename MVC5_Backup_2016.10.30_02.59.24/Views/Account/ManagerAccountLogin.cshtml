@@ -1,0 +1,23 @@
+﻿
+@using MVC5.Models
+@model AdminViewModel
+
+@{
+  ViewBag.Title = "管理帳戶";
+}
+
+<h2>@ViewBag.Title.</h2>
+<div class="row">
+  <div class="col-md-8">
+    <section id="loginForm">
+      @using (Html.BeginForm("ManagerAccountLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+      {
+        
+      }
+    </section>
+  </div>
+</div>
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+}

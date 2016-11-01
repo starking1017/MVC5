@@ -1,0 +1,45 @@
+﻿@model MVC5.Models.Device
+
+@{
+  ViewBag.Title = "title";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*header*@
+<div class="row">
+  <div class="col-sm-4">
+    <h2>云比较</h2>
+
+  </div>
+  <div>
+    <input type="button" class="btn btn-primary pull-right" value="回生命管理选单"
+           onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">云比较</div>
+  <div class="panel-body">
+    <div class="form-inline">
+      <h4>
+        <label>维护频率</label>
+        <label class="label label-success">xxx</label>
+        <label>平均寿命</label>
+        <label class="label label-success">xxx</label>
+        <label>更换成本</label>
+        <label class="label label-success">xxx</label>
+        <label>报废代价</label>
+        <label class="label label-success">xxx</label>
+        <label>最优更换年龄</label>
+        <label class="label label-success">xxx</label>
+      </h4>
+    </div>
+    <p></p>
+    <img src="~/temp/@ViewBag.name" alt="" />
+    <p></p>
+    <img src="~/temp/@ViewBag.name" alt="" />
+    <p></p>
+  </div>
+</div>
+
+
