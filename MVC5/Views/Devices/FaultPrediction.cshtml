@@ -24,7 +24,7 @@
 <div class="panel panel-default">
   <div class="panel-heading">数据上传</div>
   <div class="panel-body">
-    <img src="~/@User.Identity.Name/@Model.ID/@ViewBag.name" alt="degradation.jpg" />
+    <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name?@DateTime.Now" alt="degradation.jpg" />
 
     <ul>
       <li>
@@ -34,7 +34,7 @@
     <div class="form-inline text-center">
       <label>预测到</label>
       <select class="form-control" name="Selectyear" id="Selectyear">
-        @for (int i = 0; i < 50; ++i)
+        @for (int i = 0; i < 20; ++i)
         {
           <option>@(2017 + i)</option>
         }
@@ -52,17 +52,28 @@
 </div>
 
 <script language="javascript">
+  var result = @Html.Raw(Json.Encode(ViewBag.result));
+
+  if (result !== "" && result!== null) {
+    $.alert({
+      title: '錯誤!',
+      content: result
+    });
+  }
+</script>
+
+<script language="javascript">
   $(document).ready(function () {
     $("#Selectyear")
-   .change(function () {
-     
-     var failureforecast = @Html.Raw(Json.Encode(ViewBag.failureforecast));
-     var str = "";
-     $("select option:selected").each(function () {
-       str += failureforecast[$(this).text()];
-     });
-     $("#number").text(str);
-   })
-   .trigger("change");
+      .change(function () {
+
+        var failureforecast = @Html.Raw(Json.Encode(ViewBag.failureforecast));
+        var str = "";
+        $("select option:selected").each(function () {
+          str += failureforecast[$(this).text()];
+        });
+        $("#number").text(str);
+      })
+      .trigger("change");
   });
 </script>

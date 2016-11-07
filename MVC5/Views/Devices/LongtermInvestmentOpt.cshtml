@@ -21,51 +21,55 @@
   <div class="panel-heading">长期投资优化</div>
   <div class="panel-body">
     <p></p>
-    <form class="form-horizontal">
-
-      <div class="form-group">
+    @using (Html.BeginForm("LongtermInvestmentOpt", "Devices", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+      <div class="form-group ">
         <label class="col-sm-2 control-label">请输入年均最大投资额</label>
         <div class="col-sm-4">
-          <input class="form-control" type="text" placeholder="10000" />
+          <input class="form-control" type="text" placeholder="10000" id="maxamount" name="maxamount" 
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')"/>
         </div>
       </div>
 
       <div class="form-group">
         <label class="col-sm-2 control-label">固定投资周期</label>
         <div class="col-sm-4">
-          <input class="form-control" type="text" placeholder="10" />
+          <input class="form-control" type="text" placeholder="10" id="fixperiod" name="fixperiod"
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')"/>
         </div>
-        <div class="col-sm-2">
-          <button type="submit" class="btn btn-success form-control">运行</button>
+        <div class="col-sm-5 text-right">
+          @Html.Hidden("id", Model.ID)
+          <input type="submit" class="btn btn-success minwidth100" value="运行" />
         </div>
       </div>
 
-    </form>
-
+    }
     <p></p>
-
-    <img src="~/temp/@ViewBag.name" alt="" />
+    @if (ViewBag.name != null && ViewBag.name != "")
+    {
+      <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name?@DateTime.Now" alt="montecarloinvest.jpg" />
+    }
     <p></p>
 
     <div class="well well-sm">
       <div class="row">
-          <label class="control-label col-sm-3">最优年均主动投资额为:</label>
-          <div class="col-sm-9">
-            <label class="k-bold text-success">10000</label>
-          </div>
-      </div>
-
-      <div class="row">
-          <label class="control-label col-sm-3">此投资额下的被动更换费用为:</label>
-          <div class="col-sm-9">
-            <label class="k-bold text-success">10000</label>
-          </div>
-      </div>
-
-      <div class="row">
-        <label class="control-label col-sm-3">此投资额下的年均总支出为:</label>
+        <label class="control-label col-sm-3 text-right">最优年均主动投资额为:</label>
         <div class="col-sm-9">
-          <label class="k-bold text-success">10000</label>
+          <label class="k-bold text-success">@ViewBag.result1</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="control-label col-sm-3 text-right">此投资额下的被动更换费用为:</label>
+        <div class="col-sm-9">
+          <label class="k-bold text-success">@ViewBag.result2</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="control-label col-sm-3 text-right">此投资额下的年均总支出为:</label>
+        <div class="col-sm-9">
+          <label class="k-bold text-success">@ViewBag.result3</label>
         </div>
       </div>
 

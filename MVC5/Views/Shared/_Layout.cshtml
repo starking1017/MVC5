@@ -4,9 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@ViewBag.Title - My ASP.NET Application</title>
+
   @Styles.Render("~/Content/css")
+
   @Scripts.Render("~/bundles/modernizr")
   @Scripts.Render("~/bundles/jquery")
+  @Scripts.Render("~/bundles/jquery-confirm2")
+  @Scripts.Render("~/bundles/kendo")
+  @Scripts.Render("~/bundles/bootstrap")
 
   <script type="text/javascript">
     var appInsights = window.appInsights || function (config) {
@@ -52,9 +57,6 @@
       <p>&copy; @DateTime.Now.Year - 落矶山设备生命管理平台</p>
     </footer>
   </div>
-
-  @Scripts.Render("~/bundles/kendo")
-  @Scripts.Render("~/bundles/bootstrap")
   @RenderSection("scripts", required: false)
 </body>
 </html>

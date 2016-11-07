@@ -92,68 +92,91 @@
         </table>
       </div>
     </div>
-    <div class="box">
-      <h4>上传传感器历史数据</h4>
-    </div>
-    <div>
       <div class="demo-section k-content">
         @(Html.Kendo().Upload()
-            .Name("files")
-            .Async(a => a
-              .Save("Save", "Devices")
-              .Remove("Remove", "Devices")
-              .SaveField("files"))
+              .Name("files")
+              .HtmlAttributes(new { accept = ".xls, xlsx" })
+              .HtmlAttributes(new { accept = ".csv" })
+              .HtmlAttributes(new { accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+              .Messages(m => m.Select("上传传感器历史数据..."))
+              .Async(a => a
+                .SaveField("files")
+                .Save("SaveSensorHistoryData", "Upload", new { id = Model.ID }))
+        //              .Remove("RemoveDeviceFailure", "Upload"))
         )
       </div>
-    </div>
     <p></p>
 
-
+    <div class="paddingtop20"></div>
     <div class="panel panel-default">
       <div class="panel-heading">分析建议</div>
       <div class="panel-body">
-        <form>
+        @using (Html.BeginForm("AlarmDecision", "Devices", FormMethod.Post))
+        {
           <div class="form-group form-inline">
             <label class="control-label">传感器数值1:</label>
-            <input type="text" class="form-control" placeholder="100" />
+            <input type="text" class="form-control" placeholder="100" name="sensor1" id="sensor1"
+                   onkeyup="this.value = this.value.replace(/[^\d]/g, '')" />
           </div>
           <div class="form-group form-inline">
             <label class="control-label">传感器数值2:</label>
-            <input type="text" class="form-control" placeholder="100" />
+            <input type="text" class="form-control" placeholder="100" name="sensor2" id="sensor2"
+                   onkeyup="this.value = this.value.replace(/[^\d]/g, '')" />
           </div>
           <div class="form-group form-inline">
             <label class="control-label">传感器数值3:</label>
-            <input type="text" class="form-control" placeholder="100" />
+            <input type="text" class="form-control" placeholder="100" name="sensor3" id="sensor3"
+                   onkeyup="this.value = this.value.replace(/[^\d]/g, '')" />
           </div>
           <div class="form-group form-inline">
             <label class="control-label">传感器数值4:</label>
-            <input type="text" class="form-control" placeholder="100" />
+            <input type="text" class="form-control" placeholder="100" name="sensor4" id="sensor4"
+                   onkeyup="this.value = this.value.replace(/[^\d]/g, '')" />
           </div>
           <div class="form-group form-inline">
             <label class="control-label">传感器数值5:</label>
-            <input type="text" class="form-control" placeholder="100" />
+            <input type="text" class="form-control" placeholder="100" name="sensor5" id="sensor5"
+                   onkeyup="this.value = this.value.replace(/[^\d]/g, '')" />
           </div>
           <div class="form-group form-inline">
             <label class="control-label">传感器数值6:</label>
-            <input type="text" class="form-control" placeholder="100" />
+            <input type="text" class="form-control" placeholder="100" name="sensor6" id="sensor6"
+                   onkeyup="this.value = this.value.replace(/[^\d]/g, '')" />
           </div>
           <div class="">
-            <button class="btn btn-success" type="submit">分析建议</button>
+            @Html.Hidden("id", Model.ID)
+            <input type="submit" class="btn btn-success minwidth100" value="分析建议" />
           </div>
+        }
+        @if (ViewBag.status == 1)
+        {
+
           <div class="text-center">
             <h4>
               <label class="label label-danger">建议: 运行状态异常，需要检修</label>
             </h4>
           </div>
+        }
+        @if (ViewBag.status == 0)
+        {
           <div class="text-center">
             <h4>
               <label class="label label-success">建议: 运行状态正常，不需检修</label>
             </h4>
           </div>
-
-        </form>
+        }
       </div>
     </div>
   </div>
 </div>
 
+<script language="javascript">
+  var result = @Html.Raw(Json.Encode(ViewBag.result));
+
+  if (result !== "" && result!== null) {
+    $.alert({
+      title: '錯誤!',
+      content: result
+    });
+  }
+</script>

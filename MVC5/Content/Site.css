@@ -46,3 +46,16 @@ textarea {
 div ul.padding_button10 {
   padding-bottom: 10px;
 }
+
+.form-inline label {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+div .paddingtop20 {
+  padding-top: 20px;
+}
+
+div .paddingtop10 {
+  padding-top: 10px;
+}

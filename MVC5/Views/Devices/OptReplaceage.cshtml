@@ -8,7 +8,7 @@
 @*header*@
 <div class="row">
   <div class="col-sm-4">
-    <h2>最优更换年龄-1</h2>
+    <h2>最优更换年龄</h2>
 
   </div>
   <div>
@@ -18,18 +18,40 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading">最优更换年龄-1</div>
+  <div class="panel-heading">最优更换年龄</div>
   <div class="panel-body">
-    <label>根据以上提供的信息，xxx的最佳更换年龄是N岁</label>
-    <p></p>
-    <img src="~/temp/@ViewBag.name" alt="" />
-    <p></p>
-    <div class="form-inline">
-      <label>提前/延迟到</label>
-      <input type="text" class="form-control" placeholder="10000"/>
-      <label>年</label>
+    <div class="text-center">
+      <h3>
+        <label>根据以上提供的信息，@Model.Name 的最佳更換年齡為 @ViewBag.Cost 元</label>
+      </h3>
     </div>
     <p></p>
-    <button class="btn btn-success" type="button">显示拥有成本变化</button>
+    <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name?@DateTime.Now" alt="optimalage.jpg" />
+    <p></p>
+    @using (Html.BeginForm("OptReplaceage2", "Devices", FormMethod.Post))
+    {
+      <div class="center-block text-center">
+        <div class="form-inline">
+          <label>提前/延迟到</label>
+          <input type="text" class="form-control" id="year" name="year" placeholder="0" 
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')"/>
+          <label>年</label>
+        </div>
+        <p></p>
+        @Html.Hidden("id", Model.ID)
+        <input type="submit" class="btn btn-success" value="显示拥有成本变化" />
+      </div>
+    }
   </div>
 </div>
+
+<script language="javascript">
+  var result = @Html.Raw(Json.Encode(ViewBag.result));
+
+  if (result !== "" && result!== null) {
+    $.alert({
+      title: '錯誤!',
+      content: result
+    });
+  }
+</script>
