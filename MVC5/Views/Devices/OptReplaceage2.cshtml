@@ -18,21 +18,16 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading">最优更换年龄</div>
+  <div class="panel-heading">拥有成本变化</div>
   <div class="panel-body">
     <div class="center-block text-center">
-      <h3>
-        <label>根据以上提前/延遲的年份 @Model.Name 的最佳更換年齡為 @ViewBag.Cost 年</label>
-      </h3>
-      <p></p>
-      <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name?@DateTime.Now" alt="defereffect.jpg" />
-      <p></p>
       <h3>
         <label>Monte Carlo 仿真 (Proactive + Reactive)</label>
       </h3>
       <p></p>
-      <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name1?@DateTime.Now" alt="montecarloage.jpg" />
+      <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name?@DateTime.Now" alt="montecarloage.jpg" />
       <p></p>
+      <button class="btn btn-success" type="button" onclick="location.href='@Url.Action("OptReplaceage", "Devices", new {id = Model.ID})'">最优更换年龄</button>
     </div>
   </div>
 </div>

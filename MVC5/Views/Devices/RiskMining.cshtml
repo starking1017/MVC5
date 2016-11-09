@@ -29,34 +29,40 @@
       <div class="form-group">
         <div class="form-inline">
           <label>最大</label>
-          <input class="form-control" type="text" placeholder="10000" id="max" />
+          <input class="form-control" type="text" placeholder="" id="max"
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
           <label>可能性(%)</label>
-          <input class="form-control" type="text" placeholder="20" id="maxpercent" />
+          <input class="form-control" type="text" placeholder="" id="maxpercent"
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
         </div>
       </div>
 
       <div class="form-group">
         <div class="form-inline">
           <label>中等</label>
-          <input class="form-control" type="text" placeholder="8000" id="mid" />
+          <input class="form-control" type="text" placeholder="" id="mid"
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
           <label>可能性(%)</label>
-          <input class="form-control" type="text" placeholder="60" id="midpercent" />
+          <input class="form-control" type="text" placeholder="" id="midpercent"
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
         </div>
       </div>
 
       <div class="form-group">
         <div class="form-inline">
           <label>最小</label>
-          <input class="form-control" type="text" placeholder="6000" id="min" />
+          <input class="form-control" type="text" placeholder="" id="min"
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
           <label>可能性(%)</label>
-          <input class="form-control" type="text" placeholder="20" id="minpercent" />
+          <input class="form-control" type="text" placeholder="" id="minpercent"
+                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
         </div>
       </div>
 
       <div class="form-group">
         <div class="form-inline">
           <label>平均</label>
-          <input class="form-control" type="text" placeholder="8000" id="average" name="average" readonly />
+          <input class="form-control" type="text" placeholder="" id="average" name="average" readonly />
         </div>
       </div>
 
@@ -64,32 +70,22 @@
       <input type="submit" class="btn btn-success" value="生成曲线" />
     }
 
-
     <div class="col-md-6">
-      @if (ViewBag.name != null && ViewBag.name != "")
-      {
-        <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name?@DateTime.Now" alt="" />
-      }
-    </div>
-
-    <p></p>
-
-    <div class="col-md-7">
-      <div class="paddingtop10">
+      <div>
         <label>或...</label>
       </div>
 
       <div class="demo-section k-content">
         @(Html.Kendo().Upload()
-              .Name("files")
-              .HtmlAttributes(new { accept = ".xls, xlsx" })
-              .HtmlAttributes(new { accept = ".csv" })
-              .HtmlAttributes(new { accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
-              .Messages(m => m.Select("上传設備 - 風險..."))
-              .Async(a => a
-                .SaveField("files")
-                .Save("SaveDeviceRisk", "Upload", new { id = Model.ID }))
-        //              .Remove("RemoveDeviceFailure", "Upload"))
+            .Name("files")
+            .HtmlAttributes(new { accept = ".xls, xlsx" })
+            .HtmlAttributes(new { accept = ".csv" })
+            .HtmlAttributes(new { accept = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+            .Messages(m => m.Select("上传設備 - 風險..."))
+            .Async(a => a
+              .SaveField("files")
+              .Save("SaveDeviceRisk", "Upload", new { id = Model.ID }))
+            //              .Remove("RemoveDeviceFailure", "Upload"))
         )
       </div>
 
@@ -99,8 +95,17 @@
         <input type="submit" class="btn btn-success" value="生成曲线"
                onclick="location.href='@Url.Action("GenerateRiskCurve", "Devices", new { id = Model.ID })'" />
       </div>
+
     </div>
+
     <p></p>
+
+    <div class="col-md-12">
+      @if (ViewBag.name != null && ViewBag.name != "")
+      {
+        <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name?@DateTime.Now" alt="" />
+      }
+    </div>
 
     <div class="row col-md-12 paddingtop20">
       <ul>
@@ -119,7 +124,7 @@
           }
         </select>
         <label>
-          年以前，您的 @Model.Name 浅在风险将为 <label id="number"></label> 元
+          年以前，您的 @Model.Name 潜在风险将为 <label id="number"></label> 元
         </label>
       </div>
 
@@ -150,6 +155,13 @@
 				  var average = parseInt($("#max:text").val()) * parseFloat($("#maxpercent:text").val() / 100) +
 						parseInt($("#mid:text").val()) * parseFloat($("#midpercent:text").val() / 100) +
 						parseInt($("#min:text").val()) * parseFloat($("#minpercent:text").val() / 100);
+				  $("#average").val(average);
+//
+//				  var total = parseInt($("#maxpercent:text").val())
+//            +parseInt($("#midpercent:text").val())+parseInt($("#minpercent:text").val());
+//          
+
+
 				  $("#average").val(average);
 				});
 		});

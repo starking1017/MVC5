@@ -637,7 +637,11 @@ namespace MVC5.Controllers
     [HttpPost]
     public async Task<ActionResult> GenerateRiskCurveByInput(FormCollection form)
     {
-      var id = int.Parse(form["id"].ToString());
+      int id = 0;
+      if (form["id"] != "")
+      {
+        int.TryParse(form["id"], out id);
+      }
       Device device = await _dbContext.Devices.FindAsync(id);
 
       // check failureforecast.csv
@@ -647,7 +651,6 @@ namespace MVC5.Controllers
 
       if (!System.IO.File.Exists(failureforecastFileName))
       {
-        // 建议用户”先上传设备ID-年份列表并运行衰老曲线”
         ViewBag.result = "請先上传设备ID-年份列表并运行衰老曲线";
         return View("RiskMining", device);
       }
@@ -658,7 +661,7 @@ namespace MVC5.Controllers
       pExecuteEXE.StartInfo.FileName = HttpRuntime.AppDomainAppPath + "exes\\risk1.exe";
       pExecuteEXE.StartInfo.WorkingDirectory = HttpRuntime.AppDomainAppPath + "exes\\";
       pExecuteEXE.StartInfo.Arguments = User.Identity.GetUserName() + " " +
-                                        id.ToString() + " " +
+                                        id + " " +
                                         riskAverage + " " +
                                         device.ReplaceFee + " " +
                                         device.MaxUsedYear + " ";
@@ -685,26 +688,25 @@ namespace MVC5.Controllers
         }
       }
 
-      // check reslut.csv and update value back to database.
-      string resultFileName = HttpRuntime.AppDomainAppPath + "users\\" +
-                        User.Identity.GetUserName() + "\\" +
-                        device.ID.ToString() + "\\" + "results.csv";
+      //// check reslut.csv and update value back to database.
+      //string resultFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+      //                  User.Identity.GetUserName() + "\\" +
+      //                  device.ID.ToString() + "\\" + "results.csv";
 
-      if (System.IO.File.Exists(resultFileName))
-      {
-        int optimizeChangeYear = 0;
+      //if (System.IO.File.Exists(resultFileName))
+      //{
+      //  var resultsList = new List<double>();
 
-        using (StreamReader SR = new StreamReader(resultFileName))
-        {
-          string Line;
-          while ((Line = SR.ReadLine()) != null)
-          {
-            optimizeChangeYear = int.Parse(Line);
-          }
-        }
-        // update value to database TODO
-
-      }
+      //  using (StreamReader SR = new StreamReader(resultFileName))
+      //  {
+      //    string Line;
+      //    while ((Line = SR.ReadLine()) != null)
+      //    {
+      //      var results = Line.Split(',');
+      //      resultsList.Add(double.Parse(results[0]));
+      //    }
+      //  }
+      //}
 
       ViewBag.name = "fcostcurve.jpg";
       ViewBag.fcostforecast = fcostforecast;
@@ -860,29 +862,7 @@ namespace MVC5.Controllers
         return View("OptReplaceage", device);
       }
 
-
-      // check reslut.csv and update value back to database.
-      string resultFile = HttpRuntime.AppDomainAppPath + "users\\" +
-                        User.Identity.GetUserName() + "\\" +
-                        device.ID + "\\" + "results.csv";
-
-      List<int> listResults = new List<int>();
-      if (System.IO.File.Exists(resultFile))
-      {
-        using (StreamReader SR = new StreamReader(resultFile))
-        {
-          string Line;
-          while ((Line = SR.ReadLine()) != null)
-          {
-            var results = Line.Split(',');
-            listResults.Add(int.Parse(results[0]));
-          }
-        }
-      }
-
-      ViewBag.cost = listResults[1];
-      ViewBag.name = "defereffect.jpg";
-      ViewBag.name1 = "montecarloage.jpg";
+      ViewBag.name = "montecarloage.jpg";
       return View("OptReplaceage2", device);
     }
     #endregion

@@ -70,7 +70,7 @@
         var failureforecast = @Html.Raw(Json.Encode(ViewBag.failureforecast));
         var str = "";
         $("select option:selected").each(function () {
-          str += failureforecast[$(this).text()];
+          str += Math.round(failureforecast[$(this).text()]);
         });
         $("#number").text(str);
       })
