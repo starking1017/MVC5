@@ -219,44 +219,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201609200732406_InitialCreate.cs" />
-    <Compile Include="Migrations\201609200732406_InitialCreate.Designer.cs">
-      <DependentUpon>201609200732406_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609260929423_Init.cs" />
-    <Compile Include="Migrations\201609260929423_Init.Designer.cs">
-      <DependentUpon>201609260929423_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609270541364_AddDevice.cs" />
-    <Compile Include="Migrations\201609270541364_AddDevice.Designer.cs">
-      <DependentUpon>201609270541364_AddDevice.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609270615289_ChangeTableName.cs" />
-    <Compile Include="Migrations\201609270615289_ChangeTableName.Designer.cs">
-      <DependentUpon>201609270615289_ChangeTableName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609270820261_onetomany.cs" />
-    <Compile Include="Migrations\201609270820261_onetomany.Designer.cs">
-      <DependentUpon>201609270820261_onetomany.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610032037318_addrole.cs" />
-    <Compile Include="Migrations\201610032037318_addrole.Designer.cs">
-      <DependentUpon>201610032037318_addrole.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610162011334_new.cs" />
-    <Compile Include="Migrations\201610162011334_new.Designer.cs">
-      <DependentUpon>201610162011334_new.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610170710128_remove_deviceID.cs" />
-    <Compile Include="Migrations\201610170710128_remove_deviceID.Designer.cs">
-      <DependentUpon>201610170710128_remove_deviceID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610230453036_adddevicelistfield.cs" />
-    <Compile Include="Migrations\201610230453036_adddevicelistfield.Designer.cs">
-      <DependentUpon>201610230453036_adddevicelistfield.cs</DependentUpon>
+    <Compile Include="Migrations\201612060811491_Init1.cs" />
+    <Compile Include="Migrations\201612060811491_Init1.Designer.cs">
+      <DependentUpon>201612060811491_Init1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\DeviceModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -423,6 +393,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Scripts\CloudComparisonApi.js" />
     <Content Include="Content\kendo.bootstrap.min.css" />
     <Content Include="Content\kendo.common-bootstrap.min.css" />
     <Content Include="Content\kendo\2016.3.1028\Black\editor.png" />
@@ -759,10 +730,13 @@
     <Content Include="Content\kendo\2016.3.1028\Uniform\sprite_2x.png" />
     <Content Include="Content\kendo\2016.3.1028\Uniform\sprite_kpi.png" />
     <Content Include="Content\kendo\2016.3.1028\Uniform\sprite_kpi_2x.png" />
+    <Content Include="exes\Alarm.exe" />
+    <Content Include="exes\defereffect.exe" />
     <Content Include="exes\Degradation1.exe" />
     <Content Include="exes\Degradation2.exe" />
     <Content Include="exes\Helloworld.exe" />
     <Content Include="exes\lifecurve1.exe" />
+    <Content Include="exes\LongtermOpt.exe" />
     <Content Include="exes\MonteCarlo.exe" />
     <Content Include="exes\Risk1.exe" />
     <Content Include="exes\Risk2.exe" />
@@ -993,13 +967,12 @@
     <Content Include="bower_components\jquery\external\sizzle\dist\sizzle.min.map" />
     <Content Include="bower_components\jquery\README.md" />
     <Content Include="bower_components\jquery\src\.eslintrc.json" />
-    <None Include="Properties\PublishProfiles\grasptest - Web Deploy %282%29.pubxml" />
-    <None Include="Properties\PublishProfiles\grasptest - Web Deploy %283%29.pubxml" />
-    <None Include="Properties\PublishProfiles\grasptest - Web Deploy.pubxml" />
+    <Content Include="exes\results.csv" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <None Include="Properties\PublishProfiles\LCAM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
@@ -1349,32 +1322,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609200732406_InitialCreate.resx">
-      <DependentUpon>201609200732406_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609260929423_Init.resx">
-      <DependentUpon>201609260929423_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609270541364_AddDevice.resx">
-      <DependentUpon>201609270541364_AddDevice.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609270615289_ChangeTableName.resx">
-      <DependentUpon>201609270615289_ChangeTableName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609270820261_onetomany.resx">
-      <DependentUpon>201609270820261_onetomany.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610032037318_addrole.resx">
-      <DependentUpon>201610032037318_addrole.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610162011334_new.resx">
-      <DependentUpon>201610162011334_new.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610170710128_remove_deviceID.resx">
-      <DependentUpon>201610170710128_remove_deviceID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610230453036_adddevicelistfield.resx">
-      <DependentUpon>201610230453036_adddevicelistfield.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612060811491_Init1.resx">
+      <DependentUpon>201612060811491_Init1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -56,6 +56,16 @@ namespace MVC5.Models
     [DisplayName("上传年份列表")]
     public bool DeviceList { get; set; }
 
+    [DisplayName("平均更换年龄")]
+    public double AvgChangeYear { get; set; }
+
+    [DisplayName("最优更换年龄")]
+    public double OptChangeYear { get; set; }
+
+    [DisplayName("报废代价")]
+    public double ScrapCost { get; set; }
+
     public virtual ApplicationUser ApplicationUser { get; set; }
   }
 }
+

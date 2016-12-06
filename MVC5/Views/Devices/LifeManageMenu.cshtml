@@ -9,7 +9,7 @@
 
 <div>
   <hr />
-  <div class="col-md-8">
+  <div class="col-md-8 col-sm-8">
     <dl class="dl-horizontal">
       @*      <dt>*@
       @*        @Html.DisplayNameFor(model => model.DeviceId)*@
@@ -115,7 +115,7 @@
     </div>
   </div>
 
-  <div class="col-md-3 btn-group-vertical btn-group-md col-md-offset-1">
+  <div class="col-md-3 btn-group-vertical btn-group-md col-md-offset-1 col-sm-3 col-sm-offset-1">
     <button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("AgingCurve", "Devices", new {id = Model.ID})'">衰老曲線</button>
     <p></p>
     <button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("FaultPrediction", "Devices", new {id = Model.ID})'">故障预测</button>

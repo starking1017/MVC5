@@ -11,6 +11,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MVC5.Models;
+using System.Collections;
+using Newtonsoft.Json.Linq;
 
 namespace MVC5.Controllers
 {
@@ -68,36 +70,6 @@ namespace MVC5.Controllers
       return View();
     }
 
-    //// POST: Devices/Create
-    //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-    //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [Authorize]
-    [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Create([Bind(Include = "ID,DeviceId,Name,Type,Factory,Model,Amount,Description,MaintainFrequency,ReplaceFee,MaxUsedYear")]  Device device)
-    {
-      if (ModelState.IsValid)
-      {
-        string currentUserId = User.Identity.GetUserId();
-        device.ApplicationUser = _dbContext.Users.FirstOrDefault(x => x.Id == currentUserId);
-        _dbContext.Devices.Add(device);
-        await _dbContext.SaveChangesAsync();
-
-        // Create userid/deviceid folder
-        var destinationPath = Path.Combine(Server.MapPath("~/users"),
-          User.Identity.GetUserName(), device.ID.ToString());
-        if (!Directory.Exists(destinationPath))
-        {
-          Directory.CreateDirectory(destinationPath);
-          string sourceFile = HttpRuntime.AppDomainAppPath + "exes\\results.csv";
-          System.IO.File.Copy(sourceFile, destinationPath);
-        }
-
-        return RedirectToAction("Index");
-      }
-
-      return View(device);
-    }
     // POST: Devices/Create
     // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -137,7 +109,7 @@ namespace MVC5.Controllers
               // create folder and copy results.csv empty template
               Directory.CreateDirectory(destinationPath);
               string sourceFile = HttpRuntime.AppDomainAppPath + "exes\\results.csv";
-              System.IO.File.Copy(sourceFile, destinationPath);
+              System.IO.File.Copy(sourceFile, destinationPath + "exes\\results.csv");
             }
 
             // Set fix filename for all upload file
@@ -391,6 +363,25 @@ namespace MVC5.Controllers
         }
       }
 
+      // check results.csv and store value to database
+      string resultsFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "results.csv";
+      var results = new List<double>();
+      if (System.IO.File.Exists(resultsFileName))
+      {
+        using (StreamReader SR = new StreamReader(resultsFileName))
+        {
+          string Line;
+          while ((Line = SR.ReadLine()) != null)
+          {
+            results.Add(double.Parse(Line));
+          }
+        }
+      }
+      device.AvgChangeYear = results[0]; // 平均更換年齡
+      _dbContext.SaveChanges();
+
       ViewBag.name = "degradation.jpg";
       ViewBag.failureforecast = failureforecast;
 
@@ -448,11 +439,30 @@ namespace MVC5.Controllers
         }
       }
 
+      // check results.csv and store value to database
+      string resultsFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "results.csv";
+      var results = new List<double>();
+      if (System.IO.File.Exists(resultsFileName))
+      {
+        using (StreamReader SR = new StreamReader(resultsFileName))
+        {
+          string Line;
+          while ((Line = SR.ReadLine()) != null)
+          {
+            results.Add(double.Parse(Line));
+          }
+        }
+      }
+      device.AvgChangeYear = results[0]; // 平均更換年齡
+      _dbContext.SaveChanges();
+
       ViewBag.name = "degradation.jpg";
       ViewBag.failureforecast = failureforecast;
       return View("FaultPrediction", device);
-
     }
+
     [Authorize]
     public async Task<ActionResult> DownloadFailureForecast(int id)
     {
@@ -607,26 +617,26 @@ namespace MVC5.Controllers
         }
       }
 
-      // check reslut.csv and update value back to database.
-      string resultFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+      // check results.csv and store value to database
+      string resultsFileName = HttpRuntime.AppDomainAppPath + "users\\" +
                         User.Identity.GetUserName() + "\\" +
                         device.ID.ToString() + "\\" + "results.csv";
-
-      if (System.IO.File.Exists(resultFileName))
+      var results = new List<double>();
+      if (System.IO.File.Exists(resultsFileName))
       {
-        int optimizeChangeYear = 0;
-
-        using (StreamReader SR = new StreamReader(resultFileName))
+        using (StreamReader SR = new StreamReader(resultsFileName))
         {
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            optimizeChangeYear = int.Parse(Line);
+            results.Add(double.Parse(Line));
           }
         }
-        // update value to database TODO
-
       }
+      device.OptChangeYear = results[1]; // 最優更換年齡
+      device.ScrapCost = results[6]; // 報廢代價
+      _dbContext.SaveChanges();
+
 
       ViewBag.fcostforecast = fcostforecast;
       ViewBag.name = "fcostcurve.jpg";
@@ -688,31 +698,30 @@ namespace MVC5.Controllers
         }
       }
 
-      //// check reslut.csv and update value back to database.
-      //string resultFileName = HttpRuntime.AppDomainAppPath + "users\\" +
-      //                  User.Identity.GetUserName() + "\\" +
-      //                  device.ID.ToString() + "\\" + "results.csv";
-
-      //if (System.IO.File.Exists(resultFileName))
-      //{
-      //  var resultsList = new List<double>();
-
-      //  using (StreamReader SR = new StreamReader(resultFileName))
-      //  {
-      //    string Line;
-      //    while ((Line = SR.ReadLine()) != null)
-      //    {
-      //      var results = Line.Split(',');
-      //      resultsList.Add(double.Parse(results[0]));
-      //    }
-      //  }
-      //}
+      // check results.csv and store value to database
+      string resultsFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "results.csv";
+      var results = new List<double>();
+      if (System.IO.File.Exists(resultsFileName))
+      {
+        using (StreamReader SR = new StreamReader(resultsFileName))
+        {
+          string Line;
+          while ((Line = SR.ReadLine()) != null)
+          {
+            results.Add(double.Parse(Line));
+          }
+        }
+      }
+      device.OptChangeYear = results[1]; // 最優更換年齡
+      device.ScrapCost = results[6]; // 報廢代價
+      _dbContext.SaveChanges();
 
       ViewBag.name = "fcostcurve.jpg";
       ViewBag.fcostforecast = fcostforecast;
       return View("RiskMining", device);
     }
-
 
     [Authorize]
     public async Task<ActionResult> DownloadDeviceRisk(int id)
@@ -754,33 +763,15 @@ namespace MVC5.Controllers
         return View("OptReplaceage", device);
       }
 
-      // check reslut.csv and update value back to database.
-      string resultFileName = HttpRuntime.AppDomainAppPath + "users\\" +
-                        User.Identity.GetUserName() + "\\" +
-                        device.ID + "\\" + "results.csv";
-
-      List<int> listResult = new List<int>();
-      if (System.IO.File.Exists(resultFileName))
-      {
-        using (StreamReader SR = new StreamReader(resultFileName))
-        {
-          string Line;
-          while ((Line = SR.ReadLine()) != null)
-          {
-            var results = Line.Split(',');
-            listResult.Add(int.Parse(results[0]));
-          }
-        }
-      }
-
-      ViewBag.cost = listResult[1];
+      ViewBag.year = device.OptChangeYear;
       ViewBag.name = "optimalage.jpg";
+      ViewBag.name1 = "montecarloage.jpg";
       return View("OptReplaceage", device);
     }
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult> OptReplaceage2(FormCollection form)
+    public async Task<ActionResult> OptReplaceage(FormCollection form)
     {
       var id = int.Parse(form["id"].ToString());
       Device device = await _dbContext.Devices.FindAsync(id);
@@ -792,27 +783,8 @@ namespace MVC5.Controllers
 
       if (!System.IO.File.Exists(fcostforecastFileName))
       {
-        // check reslut.csv and update value back to database.
-        string resultFileName = HttpRuntime.AppDomainAppPath + "users\\" +
-                          User.Identity.GetUserName() + "\\" +
-                          device.ID + "\\" + "results.csv";
-
-        List<int> listResult = new List<int>();
-        if (System.IO.File.Exists(resultFileName))
-        {
-          using (StreamReader SR = new StreamReader(resultFileName))
-          {
-            string Line;
-            while ((Line = SR.ReadLine()) != null)
-            {
-              var results = Line.Split(',');
-              listResult.Add(int.Parse(results[0]));
-            }
-          }
-        }
-
         ViewBag.result = "风险预测档案不存在，请先进行风险挖掘";
-        ViewBag.cost = listResult[1];
+        ViewBag.year = device.OptChangeYear;
         ViewBag.name = "optimalage.jpg";
         return View("OptReplaceage", device);
       }
@@ -824,46 +796,32 @@ namespace MVC5.Controllers
       pExecuteEXE.StartInfo.WorkingDirectory = HttpRuntime.AppDomainAppPath + "exes\\";
       pExecuteEXE.StartInfo.Arguments = User.Identity.GetUserName() + " " +
                                         id.ToString() + " " +
-                                        year;
+                                        year + " " +
+                                        device.ScrapCost + " " +
+                                        device.ReplaceFee;
+
       pExecuteEXE.StartInfo.UseShellExecute = false;
       pExecuteEXE.Start();
       pExecuteEXE.WaitForExit();
 
-      // check defereffect.jpg
-      string defereffectFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+      // check montecarloage.jpg
+      string montecarloageFileName = HttpRuntime.AppDomainAppPath + "users\\" +
                         User.Identity.GetUserName() + "\\" +
-                        device.ID.ToString() + "\\" + "defereffect.jpg";
+                        device.ID.ToString() + "\\" + "montecarloage.jpg";
 
-      if (!System.IO.File.Exists(defereffectFileName))
+      if (!System.IO.File.Exists(montecarloageFileName))
       {
         ViewBag.result = "图形不存在，请重新执行提前/延迟成本变化分析";
-        // check reslut.csv and update value back to database.
-        string resultFileName = HttpRuntime.AppDomainAppPath + "users\\" +
-                          User.Identity.GetUserName() + "\\" +
-                          device.ID + "\\" + "results.csv";
 
-        List<int> listResult = new List<int>();
-        if (System.IO.File.Exists(resultFileName))
-        {
-          using (StreamReader SR = new StreamReader(resultFileName))
-          {
-            string Line;
-            while ((Line = SR.ReadLine()) != null)
-            {
-              var results = Line.Split(',');
-              listResult.Add(int.Parse(results[0]));
-            }
-          }
-        }
-
-        ViewBag.result = "风险预测档案不存在，请先进行风险挖掘";
-        ViewBag.cost = listResult[1];
+        ViewBag.year = device.OptChangeYear;
         ViewBag.name = "optimalage.jpg";
         return View("OptReplaceage", device);
       }
 
-      ViewBag.name = "montecarloage.jpg";
-      return View("OptReplaceage2", device);
+      ViewBag.year = device.OptChangeYear;
+      ViewBag.name = "optimalage.jpg";
+      ViewBag.name1 = "montecarloage.jpg";
+      return View("OptReplaceage", device);
     }
     #endregion
 
@@ -877,11 +835,11 @@ namespace MVC5.Controllers
       // check optimalage.jpg
       string montecarloinvestFileName = HttpRuntime.AppDomainAppPath + "users\\" +
                         User.Identity.GetUserName() + "\\" +
-                        device.ID + "\\" + "montecarloinvest.jpg";
+                        device.ID + "\\" + "montecarlolongterm.jpg";
 
       if (System.IO.File.Exists(montecarloinvestFileName))
       {
-        ViewBag.name = "montecarloinvest.jpg";
+        ViewBag.name = "montecarlolongterm.jpg";
       }
 
       // check reslut.csv and update value back to database.
@@ -889,7 +847,7 @@ namespace MVC5.Controllers
                         User.Identity.GetUserName() + "\\" +
                         device.ID + "\\" + "results.csv";
 
-      List<int> listResults = new List<int>();
+      List<double> listResults = new List<double>();
       if (System.IO.File.Exists(resultFile))
       {
         using (StreamReader SR = new StreamReader(resultFile))
@@ -897,10 +855,10 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            var results = Line.Split(',');
-            listResults.Add(int.Parse(results[0]));
+            listResults.Add(double.Parse(Line));
           }
         }
+
         ViewBag.result1 = listResults[2];
         ViewBag.result2 = listResults[3];
         ViewBag.result3 = listResults[4];
@@ -920,12 +878,15 @@ namespace MVC5.Controllers
       var fixPeriod = form["fixperiod"] == "" ? 0 : int.Parse(form["fixperiod"].ToString());
 
       System.Diagnostics.Process pExecuteEXE = new System.Diagnostics.Process();
-      pExecuteEXE.StartInfo.FileName = HttpRuntime.AppDomainAppPath + "exes\\invest.exe";
+      pExecuteEXE.StartInfo.FileName = HttpRuntime.AppDomainAppPath + "exes\\LongtermOpt.exe";
       pExecuteEXE.StartInfo.WorkingDirectory = HttpRuntime.AppDomainAppPath + "exes\\";
       pExecuteEXE.StartInfo.Arguments = User.Identity.GetUserName() + " " +
                                         id.ToString() + " " +
-                                        maxAmount + " " +
-                                        fixPeriod;
+                                        device.ScrapCost + " " +
+                                        device.ReplaceFee + " " +
+                                        fixPeriod + " " +
+                                        maxAmount;
+
       pExecuteEXE.StartInfo.UseShellExecute = false;
       pExecuteEXE.Start();
       pExecuteEXE.WaitForExit();
@@ -933,11 +894,11 @@ namespace MVC5.Controllers
       // check optimalage.jpg
       string montecarloinvestFileName = HttpRuntime.AppDomainAppPath + "users\\" +
                         User.Identity.GetUserName() + "\\" +
-                        device.ID + "\\" + "montecarloinvest.jpg";
+                        device.ID + "\\" + "montecarlolongterm.jpg";
 
       if (System.IO.File.Exists(montecarloinvestFileName))
       {
-        ViewBag.name = "montecarloinvest.jpg";
+        ViewBag.name = "montecarlolongterm.jpg";
       }
 
       // check reslut.csv and update value back to database.
@@ -945,7 +906,7 @@ namespace MVC5.Controllers
                         User.Identity.GetUserName() + "\\" +
                         device.ID + "\\" + "results.csv";
 
-      List<int> listResults = new List<int>();
+      List<double> listResults = new List<double>();
       if (System.IO.File.Exists(resultFile))
       {
         using (StreamReader SR = new StreamReader(resultFile))
@@ -953,8 +914,7 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            var results = Line.Split(',');
-            listResults.Add(int.Parse(results[0]));
+            listResults.Add(double.Parse(Line));
           }
         }
         ViewBag.result1 = listResults[2];
@@ -981,6 +941,17 @@ namespace MVC5.Controllers
       var id = int.Parse(form["id"].ToString());
       Device device = await _dbContext.Devices.FindAsync(id);
 
+      // check Alarmhistory.xlsx
+      string AlarmhistoryFileName = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID + "\\" + "Alarmhistory.xlsx";
+
+      if (!System.IO.File.Exists(AlarmhistoryFileName))
+      {
+        ViewBag.result = "历史传感器数据不存在，请先上传数据";
+        return View("AlarmDecision", device);
+      }
+
       var sensor1 = form["sensor1"] == "" ? -1000 : double.Parse(form["sensor1"].ToString());
       var sensor2 = form["sensor2"] == "" ? -1000 : double.Parse(form["sensor2"].ToString());
       var sensor3 = form["sensor3"] == "" ? -1000 : double.Parse(form["sensor3"].ToString());
@@ -988,42 +959,40 @@ namespace MVC5.Controllers
       var sensor5 = form["sensor5"] == "" ? -1000 : double.Parse(form["sensor5"].ToString());
       var sensor6 = form["sensor6"] == "" ? -1000 : double.Parse(form["sensor6"].ToString());
 
-      //      System.Diagnostics.Process pExecuteEXE = new System.Diagnostics.Process();
-      //      pExecuteEXE.StartInfo.FileName = HttpRuntime.AppDomainAppPath + "exes\\alarm.exe";
-      //      pExecuteEXE.StartInfo.WorkingDirectory = HttpRuntime.AppDomainAppPath + "exes\\";
-      //      pExecuteEXE.StartInfo.Arguments = User.Identity.GetUserName() + " " +
-      //                                        id.ToString() + " " +
-      //                                        sensor1 + " " +
-      //                                        sensor2 + " " +
-      //                                        sensor3 + " " +
-      //                                        sensor4 + " " +
-      //                                        sensor5 + " " +
-      //                                        sensor6;
-      //
-      //      pExecuteEXE.StartInfo.UseShellExecute = false;
-      //      pExecuteEXE.Start();
-      //      pExecuteEXE.WaitForExit();
-      //
-      //      // check reslut.csv and update value back to database.
-      //      string resultFile = HttpRuntime.AppDomainAppPath + "users\\" +
-      //                        User.Identity.GetUserName() + "\\" +
-      //                        device.ID + "\\" + "results.csv";
-      //
-      //      List<int> listResults = new List<int>();
-      //      if (System.IO.File.Exists(resultFile))
-      //      {
-      //        using (StreamReader SR = new StreamReader(resultFile))
-      //        {
-      //          string Line;
-      //          while ((Line = SR.ReadLine()) != null)
-      //          {
-      //            var results = Line.Split(',');
-      //            listResults.Add(int.Parse(results[0]));
-      //          }
-      //        }
-      //        ViewBag.status = listResults[5];
-      //      }
-      ViewBag.status = 1;
+      System.Diagnostics.Process pExecuteEXE = new System.Diagnostics.Process();
+      pExecuteEXE.StartInfo.FileName = HttpRuntime.AppDomainAppPath + "exes\\alarm.exe";
+      pExecuteEXE.StartInfo.WorkingDirectory = HttpRuntime.AppDomainAppPath + "exes\\";
+      pExecuteEXE.StartInfo.Arguments = User.Identity.GetUserName() + " " +
+                                        id.ToString() + " " +
+                                        sensor1 + " " +
+                                        sensor2 + " " +
+                                        sensor3 + " " +
+                                        sensor4 + " " +
+                                        sensor5 + " " +
+                                        sensor6;
+
+      pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.Start();
+      pExecuteEXE.WaitForExit();
+
+      // check reslut.csv and update value back to database.
+      string resultFile = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID + "\\" + "results.csv";
+
+      List<double> listResults = new List<double>();
+      if (System.IO.File.Exists(resultFile))
+      {
+        using (StreamReader SR = new StreamReader(resultFile))
+        {
+          string Line;
+          while ((Line = SR.ReadLine()) != null)
+          {
+            listResults.Add(double.Parse(Line));
+          }
+        }
+        ViewBag.status = listResults[5];
+      }
       return View("AlarmDecision", device);
     }
 
@@ -1033,6 +1002,147 @@ namespace MVC5.Controllers
       Device device = await _dbContext.Devices.FindAsync(id);
       return View("CloudComparison", device);
     }
+
+    public async Task<ActionResult> GetMaintainFrequency(int id)
+    {
+      Device device = await _dbContext.Devices.FindAsync(id);
+      var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
+
+      var deviceFactory = devicesList.Select(pp => pp.Factory).Distinct().ToArray();
+
+      List<double> allFactoryFrequency = new List<double>();
+      foreach (var ff in deviceFactory)
+      {
+        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff).Average(dd => dd.MaintainFrequency));
+      }
+      var arrAllFactoryFrequency = allFactoryFrequency.ToArray();
+
+      var dataSelf = device.MaintainFrequency;
+      var dataMax = devicesList.Max(kk => kk.MaintainFrequency);
+      var dataMin = devicesList.Min(kk => kk.MaintainFrequency);
+      var dataAvg = devicesList.Average(kk => kk.MaintainFrequency);
+
+      List<double> frequency = new List<double>();
+      frequency.Add(dataSelf);
+      frequency.Add(dataMax);
+      frequency.Add(dataAvg);
+      frequency.Add(dataMin);
+      var arrFrequency = frequency.ToArray();
+      return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
+    }
+
+    public async Task<ActionResult> GetAverageAge(int id)
+    {
+      Device device = await _dbContext.Devices.FindAsync(id);
+      var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
+
+      var deviceFactory = devicesList.Select(pp => pp.Factory).Distinct().ToArray();
+
+      List<double> allFactoryFrequency = new List<double>();
+      foreach (var ff in deviceFactory)
+      {
+        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff).Average(dd => dd.AvgChangeYear));
+      }
+      var arrAllFactoryFrequency = allFactoryFrequency.ToArray();
+
+      var dataSelf = device.AvgChangeYear;
+      var dataMax = devicesList.Max(kk => kk.AvgChangeYear);
+      var dataMin = devicesList.Min(kk => kk.AvgChangeYear);
+      var dataAvg = devicesList.Average(kk => kk.AvgChangeYear);
+
+      List<double> frequency = new List<double>();
+      frequency.Add(dataSelf);
+      frequency.Add(dataMax);
+      frequency.Add(dataAvg);
+      frequency.Add(dataMin);
+      var arrFrequency = frequency.ToArray();
+      return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
+    }
+
+    public async Task<ActionResult> GetReplacefee(int id)
+    {
+      Device device = await _dbContext.Devices.FindAsync(id);
+      var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
+
+      var deviceFactory = devicesList.Select(pp => pp.Factory).Distinct().ToArray();
+
+      List<double> allFactoryFrequency = new List<double>();
+      foreach (var ff in deviceFactory)
+      {
+        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff).Average(dd => dd.ReplaceFee));
+      }
+      var arrAllFactoryFrequency = allFactoryFrequency.ToArray();
+
+      var dataSelf = device.ReplaceFee;
+      var dataMax = devicesList.Max(kk => kk.ReplaceFee);
+      var dataMin = devicesList.Min(kk => kk.ReplaceFee);
+      var dataAvg = devicesList.Average(kk => kk.ReplaceFee);
+
+      List<double> frequency = new List<double>();
+      frequency.Add(dataSelf);
+      frequency.Add(dataMax);
+      frequency.Add(dataAvg);
+      frequency.Add(dataMin);
+      var arrFrequency = frequency.ToArray();
+      return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
+    }
+
+    public async Task<ActionResult> GetOptChangeYear(int id)
+    {
+      Device device = await _dbContext.Devices.FindAsync(id);
+      var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
+
+      var deviceFactory = devicesList.Select(pp => pp.Factory).Distinct().ToArray();
+
+      List<double> allFactoryFrequency = new List<double>();
+      foreach (var ff in deviceFactory)
+      {
+        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff).Average(dd => dd.OptChangeYear));
+      }
+      var arrAllFactoryFrequency = allFactoryFrequency.ToArray();
+
+      var dataSelf = device.OptChangeYear;
+      var dataMax = devicesList.Max(kk => kk.OptChangeYear);
+      var dataMin = devicesList.Min(kk => kk.OptChangeYear);
+      var dataAvg = devicesList.Average(kk => kk.OptChangeYear);
+
+      List<double> frequency = new List<double>();
+      frequency.Add(dataSelf);
+      frequency.Add(dataMax);
+      frequency.Add(dataAvg);
+      frequency.Add(dataMin);
+      var arrFrequency = frequency.ToArray();
+      return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
+    }
+
+    public async Task<ActionResult> GetScrapCost(int id)
+    {
+      Device device = await _dbContext.Devices.FindAsync(id);
+      var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
+
+      var deviceFactory = devicesList.Select(pp => pp.Factory).Distinct().ToArray();
+
+      List<double> allFactoryFrequency = new List<double>();
+      foreach (var ff in deviceFactory)
+      {
+        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff).Average(dd => dd.ScrapCost));
+      }
+      var arrAllFactoryFrequency = allFactoryFrequency.ToArray();
+
+      var dataSelf = device.ScrapCost;
+      var dataMax = devicesList.Max(kk => kk.ScrapCost);
+      var dataMin = devicesList.Min(kk => kk.ScrapCost);
+      var dataAvg = devicesList.Average(kk => kk.ScrapCost);
+
+      List<double> frequency = new List<double>();
+      frequency.Add(dataSelf);
+      frequency.Add(dataMax);
+      frequency.Add(dataAvg);
+      frequency.Add(dataMin);
+      var arrFrequency = frequency.ToArray();
+      return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
+    }
+
     #endregion
 
     public bool IsAdminUser()

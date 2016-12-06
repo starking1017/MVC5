@@ -255,6 +255,14 @@ namespace MVC5.Controllers
       if (ModelState.IsValid)
       {
         var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, IsEnabled = false };
+        UserManager.PasswordValidator = new PasswordValidator
+        {
+          RequiredLength = 6,
+          RequireNonLetterOrDigit = false,
+          RequireDigit = false,
+          RequireLowercase = false,
+          RequireUppercase = false,
+        };
         var result = await UserManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {

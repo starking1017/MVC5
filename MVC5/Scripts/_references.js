@@ -4,6 +4,7 @@
 /// <reference path="../bower_components/jquery-confirm2/dist/jquery-confirm.min.js" />
 /// <reference path="ai.0.22.19-build00125.js" />
 /// <reference path="bootstrap.min.js" />
+/// <reference path="cloudcomparisonapi.js" />
 /// <reference path="jquery.validate.min.js" />
 /// <reference path="jquery.validate.unobtrusive.js" />
 /// <reference path="jquery-3.1.1.js" />

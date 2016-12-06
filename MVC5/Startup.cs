@@ -37,9 +37,9 @@ namespace MVC5
 
         var user = new ApplicationUser();
         user.UserName = "admin";
-        user.Email = "admin@gmail.com";
+        user.Email = "dongmin516@gmail.com";
         user.IsEnabled = true;
-        string userPWD = "wdy2fv";
+        string userPWD = "ROCKYMOUNTAINlcam#321";
 
         var chkUser = UserManager.Create(user, userPWD);
 

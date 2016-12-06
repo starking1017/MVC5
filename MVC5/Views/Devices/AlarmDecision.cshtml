@@ -108,9 +108,9 @@
     <p></p>
 
     <div class="paddingtop20"></div>
-    <div class="panel panel-default">
-      <div class="panel-heading">分析建议</div>
-      <div class="panel-body">
+@*    <div class="panel panel-default">*@
+@*      <div class="panel-heading">分析建议</div>*@
+@*      <div class="panel-body">*@
         @using (Html.BeginForm("AlarmDecision", "Devices", FormMethod.Post))
         {
           <div class="form-group form-inline">
@@ -148,7 +148,7 @@
             <input type="submit" class="btn btn-success minwidth100" value="分析建议" />
           </div>
         }
-        @if (ViewBag.status == 1)
+        @if (ViewBag.status == 0)
         {
 
           <div class="text-center">
@@ -157,7 +157,7 @@
             </h4>
           </div>
         }
-        @if (ViewBag.status == 0)
+        @if (ViewBag.status == 1)
         {
           <div class="text-center">
             <h4>
@@ -165,8 +165,8 @@
             </h4>
           </div>
         }
-      </div>
-    </div>
+@*      </div>*@
+@*    </div>*@
   </div>
 </div>
 

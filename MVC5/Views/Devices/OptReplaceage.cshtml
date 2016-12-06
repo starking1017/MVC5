@@ -22,19 +22,19 @@
   <div class="panel-body">
     <div class="text-center">
       <h3>
-        <label>根据以上提供的信息，@Model.Name 的最佳更換年齡為 @ViewBag.Cost 年</label>
+        <label>根据以上提供的信息，@Model.Name 的最佳更换年龄为 @ViewBag.year 年</label>
       </h3>
     </div>
     <p></p>
     <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name?@DateTime.Now" alt="optimalage.jpg" />
     <p></p>
-    @using (Html.BeginForm("OptReplaceage2", "Devices", FormMethod.Post))
+    @using (Html.BeginForm("OptReplaceage", "Devices", FormMethod.Post))
     {
       <div class="center-block text-center">
         <div class="form-inline">
           <label>提前/延迟到</label>
           <input type="text" class="form-control" id="year" name="year" placeholder="0" 
-                 onkeyup="this.value=this.value.replace(/[^\d]/g,'')"/>
+                 />
           <label>年</label>
         </div>
         <p></p>
@@ -42,6 +42,9 @@
         <input type="submit" class="btn btn-success" value="显示拥有成本变化" />
       </div>
     }
+    <img src="~/users/@User.Identity.Name/@Model.ID/@ViewBag.name1?@DateTime.Now" alt="montecarloage.jpg" />
+    <p></p>
+
   </div>
 </div>
 
