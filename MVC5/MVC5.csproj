@@ -734,10 +734,7 @@
     <Content Include="exes\defereffect.exe" />
     <Content Include="exes\Degradation1.exe" />
     <Content Include="exes\Degradation2.exe" />
-    <Content Include="exes\Helloworld.exe" />
-    <Content Include="exes\lifecurve1.exe" />
     <Content Include="exes\LongtermOpt.exe" />
-    <Content Include="exes\MonteCarlo.exe" />
     <Content Include="exes\Risk1.exe" />
     <Content Include="exes\Risk2.exe" />
     <Content Include="Scripts\kendo.all.min.js" />
@@ -973,6 +970,8 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <None Include="Properties\PublishProfiles\LCAM - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\Lcam.pubxml" />
+    <None Include="Properties\PublishProfiles\Localhost.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />

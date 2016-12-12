@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MVC5.Models;
 using System.Collections;
+using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 
 namespace MVC5.Controllers
@@ -108,9 +109,10 @@ namespace MVC5.Controllers
             {
               // create folder and copy results.csv empty template
               Directory.CreateDirectory(destinationPath);
-              string sourceFile = HttpRuntime.AppDomainAppPath + "exes\\results.csv";
-              System.IO.File.Copy(sourceFile, destinationPath + "exes\\results.csv");
             }
+
+            string sourceFile = HttpRuntime.AppDomainAppPath + "exes\\results.csv";
+            System.IO.File.Copy(sourceFile, destinationPath + "\\results.csv");
 
             // Set fix filename for all upload file
             var tempFileNames = "deviceidyr" +
@@ -153,12 +155,17 @@ namespace MVC5.Controllers
       if (ModelState.IsValid)
       {
         _dbContext.Entry(device).State = EntityState.Modified;
+        var IsDeviceList = device.DeviceList;
 
-        // get upload file status and save to db
-        if (attachments != null)
-          device.DeviceList = true;
-        else
-          device.DeviceList = false;
+        if (!IsDeviceList)
+        {
+          // get upload file status and save to db
+          if (attachments != null)
+            device.DeviceList = true;
+          else
+            device.DeviceList = false;
+        }
+
         await _dbContext.SaveChangesAsync();
 
         // upload file to server
@@ -334,15 +341,37 @@ namespace MVC5.Controllers
       if (!Directory.Exists(destinationPath))
         Directory.CreateDirectory(destinationPath);
 
-      System.Diagnostics.Process pExecuteEXE = new System.Diagnostics.Process();
+
+
+      Process pExecuteEXE = new Process();
       pExecuteEXE.StartInfo.FileName = HttpRuntime.AppDomainAppPath + "exes\\Degradation1.exe";
       pExecuteEXE.StartInfo.WorkingDirectory = HttpRuntime.AppDomainAppPath + "exes\\";
       pExecuteEXE.StartInfo.Arguments = User.Identity.GetUserName() + " " + id.ToString() + " " +
                                         device.MaxUsedYear;
       pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.StartInfo.RedirectStandardOutput = true;
+      pExecuteEXE.StartInfo.RedirectStandardError = true;
+
       pExecuteEXE.Start();
+
+      //* Read the output (or the error)
+      string output = pExecuteEXE.StandardOutput.ReadToEnd();
+      string err = pExecuteEXE.StandardError.ReadToEnd();
+
       pExecuteEXE.WaitForExit();
 
+      //string output = process.StandardOutput.ReadToEnd();
+      // Set a variable to the My Documents path.
+      string logFile = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "Degradation1_log.txt";
+
+      // Append text to an existing file named "WriteLines.txt".
+      using (StreamWriter outputFile = new StreamWriter(logFile, true))
+      {
+        outputFile.WriteLine(output);
+        outputFile.WriteLine(err);
+      }
 
       // check failureforecast.csv
       string failureforecastFileName = HttpRuntime.AppDomainAppPath + "users\\" +
@@ -375,7 +404,14 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            results.Add(double.Parse(Line));
+            if (!Line.Equals("NaN"))
+            {
+              results.Add(double.Parse(Line));
+            }
+            else
+            {
+              results.Add(0);
+            }
           }
         }
       }
@@ -417,8 +453,22 @@ namespace MVC5.Controllers
                                         input3 + " " +
                                         input4 + " ";
       pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.StartInfo.RedirectStandardOutput = true;
       pExecuteEXE.Start();
       pExecuteEXE.WaitForExit();
+
+      string output = pExecuteEXE.StandardOutput.ReadToEnd();
+      // Set a variable to the My Documents path.
+      string logFile = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "Degradation2_log.txt";
+
+      // Append text to an existing file named "WriteLines.txt".
+      using (StreamWriter outputFile = new StreamWriter(logFile, true))
+      {
+        outputFile.WriteLine(output);
+      }
+
 
       // check failureforecast.csv
       string failureforecastFileName = HttpRuntime.AppDomainAppPath + "users\\" +
@@ -451,7 +501,14 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            results.Add(double.Parse(Line));
+            if (!Line.Equals("NaN"))
+            {
+              results.Add(double.Parse(Line));
+            }
+            else
+            {
+              results.Add(0);
+            }
           }
         }
       }
@@ -595,8 +652,21 @@ namespace MVC5.Controllers
                                         device.ReplaceFee + " " +
                                         device.MaxUsedYear;
       pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.StartInfo.RedirectStandardOutput = true;
       pExecuteEXE.Start();
       pExecuteEXE.WaitForExit();
+
+      string output = pExecuteEXE.StandardOutput.ReadToEnd();
+      // Set a variable to the My Documents path.
+      string logFile = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "risk2_log.txt";
+
+      // Append text to an existing file named "WriteLines.txt".
+      using (StreamWriter outputFile = new StreamWriter(logFile, true))
+      {
+        outputFile.WriteLine(output);
+      }
 
       // check fcostforecast.csv result
       string fcostforecastFileName = HttpRuntime.AppDomainAppPath + "users\\" +
@@ -629,12 +699,23 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            results.Add(double.Parse(Line));
+            if (!Line.Equals("NaN"))
+            {
+              results.Add(double.Parse(Line));
+            }
+            else
+            {
+              results.Add(0);
+            }
           }
         }
       }
+      if (!results[6].Equals("NaN"))
+      {
+        device.ScrapCost = results[6]; // 報廢代價
+      }
+
       device.OptChangeYear = results[1]; // 最優更換年齡
-      device.ScrapCost = results[6]; // 報廢代價
       _dbContext.SaveChanges();
 
 
@@ -676,8 +757,22 @@ namespace MVC5.Controllers
                                         device.ReplaceFee + " " +
                                         device.MaxUsedYear + " ";
       pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.StartInfo.RedirectStandardOutput = true;
       pExecuteEXE.Start();
       pExecuteEXE.WaitForExit();
+
+      string output = pExecuteEXE.StandardOutput.ReadToEnd();
+      // Set a variable to the My Documents path.
+      string logFile = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "risk1_log.txt";
+
+      // Append text to an existing file named "WriteLines.txt".
+      using (StreamWriter outputFile = new StreamWriter(logFile, true))
+      {
+        outputFile.WriteLine(output);
+      }
+
 
       // check fcostforecast.csv
       string fcostforecastFileName = HttpRuntime.AppDomainAppPath + "users\\" +
@@ -710,12 +805,22 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            results.Add(double.Parse(Line));
+            if (!Line.Equals("NaN"))
+            {
+              results.Add(double.Parse(Line));
+            }
+            else
+            {
+              results.Add(0);
+            }
           }
         }
       }
       device.OptChangeYear = results[1]; // 最優更換年齡
-      device.ScrapCost = results[6]; // 報廢代價
+      if (!results[6].Equals("NaN"))
+      {
+        device.ScrapCost = results[6]; // 報廢代價
+      }
       _dbContext.SaveChanges();
 
       ViewBag.name = "fcostcurve.jpg";
@@ -801,8 +906,21 @@ namespace MVC5.Controllers
                                         device.ReplaceFee;
 
       pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.StartInfo.RedirectStandardOutput = true;
       pExecuteEXE.Start();
       pExecuteEXE.WaitForExit();
+
+      string output = pExecuteEXE.StandardOutput.ReadToEnd();
+      // Set a variable to the My Documents path.
+      string logFile = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "defereffect_log.txt";
+
+      // Append text to an existing file named "WriteLines.txt".
+      using (StreamWriter outputFile = new StreamWriter(logFile, true))
+      {
+        outputFile.WriteLine(output);
+      }
 
       // check montecarloage.jpg
       string montecarloageFileName = HttpRuntime.AppDomainAppPath + "users\\" +
@@ -855,7 +973,14 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            listResults.Add(double.Parse(Line));
+            if (!Line.Equals("NaN"))
+            {
+              listResults.Add(double.Parse(Line));
+            }
+            else
+            {
+              listResults.Add(0);
+            }
           }
         }
 
@@ -888,8 +1013,22 @@ namespace MVC5.Controllers
                                         maxAmount;
 
       pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.StartInfo.RedirectStandardOutput = true;
       pExecuteEXE.Start();
       pExecuteEXE.WaitForExit();
+
+      string output = pExecuteEXE.StandardOutput.ReadToEnd();
+      // Set a variable to the My Documents path.
+      string logFile = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "LongtermOpt_log.txt";
+
+      // Append text to an existing file named "WriteLines.txt".
+      using (StreamWriter outputFile = new StreamWriter(logFile, true))
+      {
+        outputFile.WriteLine(output);
+      }
+
 
       // check optimalage.jpg
       string montecarloinvestFileName = HttpRuntime.AppDomainAppPath + "users\\" +
@@ -914,7 +1053,14 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            listResults.Add(double.Parse(Line));
+            if (!Line.Equals("NaN"))
+            {
+              listResults.Add(double.Parse(Line));
+            }
+            else
+            {
+              listResults.Add(0);
+            }
           }
         }
         ViewBag.result1 = listResults[2];
@@ -972,8 +1118,22 @@ namespace MVC5.Controllers
                                         sensor6;
 
       pExecuteEXE.StartInfo.UseShellExecute = false;
+      pExecuteEXE.StartInfo.RedirectStandardOutput = true;
       pExecuteEXE.Start();
       pExecuteEXE.WaitForExit();
+
+      string output = pExecuteEXE.StandardOutput.ReadToEnd();
+      // Set a variable to the My Documents path.
+      string logFile = HttpRuntime.AppDomainAppPath + "users\\" +
+                        User.Identity.GetUserName() + "\\" +
+                        device.ID.ToString() + "\\" + "alarm_log.txt";
+
+      // Append text to an existing file named "WriteLines.txt".
+      using (StreamWriter outputFile = new StreamWriter(logFile, true))
+      {
+        outputFile.WriteLine(output);
+      }
+
 
       // check reslut.csv and update value back to database.
       string resultFile = HttpRuntime.AppDomainAppPath + "users\\" +
@@ -988,7 +1148,14 @@ namespace MVC5.Controllers
           string Line;
           while ((Line = SR.ReadLine()) != null)
           {
-            listResults.Add(double.Parse(Line));
+            if (!Line.Equals("NaN"))
+            {
+              listResults.Add(double.Parse(Line));
+            }
+            else
+            {
+              listResults.Add(0);
+            }
           }
         }
         ViewBag.status = listResults[5];

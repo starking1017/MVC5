@@ -1,6 +1,6 @@
 ﻿
 
-//更新資料
+//更新资料
 function GetMaintainFrequency(controllerName, id) {
   $.ajax({
     url: '/' + controllerName + '/GetMaintainFrequency/' + id,
@@ -19,7 +19,7 @@ function GetMaintainFrequency(controllerName, id) {
 
       $("#chart1")
         .kendoChart({
-          title: "總體維護頻率比較",
+          title: "总体维护频率比较",
           series: [{ data: result.deviceValue }],
           categoryAxis: {
             categories: ["自己", "最大", "平均", "最小"],
@@ -27,7 +27,7 @@ function GetMaintainFrequency(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "維護頻率 : #= value #"
+            template: "维护频率 : #= value #"
           }
         });
 
@@ -35,7 +35,7 @@ function GetMaintainFrequency(controllerName, id) {
         .kendoChart({
           theme: "blueOpal",
             
-          title: "廠商維護頻率比較",
+          title: "厂商维护频率比较",
 
           series: [
           {
@@ -48,7 +48,7 @@ function GetMaintainFrequency(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "維護頻率 : #= value #"
+            template: "维护频率 : #= value #"
           }
 
         });
@@ -74,7 +74,7 @@ function GetAverageAge(controllerName, id) {
 
       $("#chart1")
         .kendoChart({
-          title: "總體平均壽命比較",
+          title: "总体平均壽命比较",
           series: [{ data: result.deviceValue }],
           categoryAxis: {
             categories: ["自己", "最大", "平均", "最小"],
@@ -90,7 +90,7 @@ function GetAverageAge(controllerName, id) {
         .kendoChart({
           theme: "blueOpal",
 
-          title: "廠商平均壽命比較",
+          title: "厂商平均壽命比较",
 
           series: [
           {
@@ -129,7 +129,7 @@ function GetReplacefee(controllerName, id) {
 
       $("#chart1")
         .kendoChart({
-          title: "總體更換成本比較",
+          title: "总体更换成本比较",
           series: [{ data: result.deviceValue }],
           categoryAxis: {
             categories: ["自己", "最大", "平均", "最小"],
@@ -137,7 +137,7 @@ function GetReplacefee(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "更換成本 : #= value #"
+            template: "更换成本 : #= value #"
           }
         });
 
@@ -145,7 +145,7 @@ function GetReplacefee(controllerName, id) {
         .kendoChart({
           theme: "blueOpal",
 
-          title: "廠商更換成本比較",
+          title: "厂商更换成本比较",
 
           series: [
           {
@@ -158,7 +158,7 @@ function GetReplacefee(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "更換成本 : #= value #"
+            template: "更换成本 : #= value #"
           }
 
         });
@@ -184,7 +184,7 @@ function GetOptChangeYear(controllerName, id) {
 
       $("#chart1")
         .kendoChart({
-          title: "總體最優更換年齡比較",
+          title: "总体最优更换年龄比较",
           series: [{ data: result.deviceValue }],
           categoryAxis: {
             categories: ["自己", "最大", "平均", "最小"],
@@ -192,7 +192,7 @@ function GetOptChangeYear(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "最優更換年齡 : #= value #"
+            template: "最优更换年龄 : #= value #"
           }
         });
 
@@ -200,7 +200,7 @@ function GetOptChangeYear(controllerName, id) {
         .kendoChart({
           theme: "blueOpal",
 
-          title: "廠商最優更換年齡比較",
+          title: "厂商最优更换年龄比较",
 
           series: [
           {
@@ -213,7 +213,7 @@ function GetOptChangeYear(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "最優更換年齡 : #= value #"
+            template: "最优更换年龄 : #= value #"
           }
 
         });
@@ -239,7 +239,7 @@ function GetScrapCost(controllerName, id) {
 
       $("#chart1")
         .kendoChart({
-          title: "總體報廢代價比較",
+          title: "总体报废代价比较",
           series: [{ data: result.deviceValue }],
           categoryAxis: {
             categories: ["自己", "最大", "平均", "最小"],
@@ -247,7 +247,7 @@ function GetScrapCost(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "報廢代價 : #= value #"
+            template: "报废代价 : #= value #"
           }
         });
 
@@ -255,7 +255,7 @@ function GetScrapCost(controllerName, id) {
         .kendoChart({
           theme: "blueOpal",
 
-          title: "廠商報廢代價比較",
+          title: "厂商报废代价比较",
 
           series: [
           {
@@ -268,7 +268,7 @@ function GetScrapCost(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "報廢代價 : #= value #"
+            template: "报废代价 : #= value #"
           }
 
         });
