@@ -85,34 +85,31 @@ namespace MVC5.Controllers
       {
         string currentUserId = User.Identity.GetUserId();
         device.ApplicationUser = _dbContext.Users.FirstOrDefault(x => x.Id == currentUserId);
-        if (attachments != null)
-          device.DeviceList = true;
-        else
-          device.DeviceList = false;
+
+        device.DeviceList = attachments != null;
+
         _dbContext.Devices.Add(device);
         await _dbContext.SaveChangesAsync();
+      }
+
+      int id = _dbContext.Devices.Select(o => o.ID).Max();
+      var destinationPath = Path.Combine(Server.MapPath("~/users"),
+                            User.Identity.GetUserName(), id.ToString());
+      // Create userid/deviceid folder
+      if (!Directory.Exists(destinationPath))
+      {
+        // create folder and copy results.csv empty template
+        Directory.CreateDirectory(destinationPath);
       }
 
       // update attachment for device
       if (attachments != null)
       {
-        int id = _dbContext.Devices.Select(o => o.ID).Max();
         foreach (var file in attachments)
         {
           var fileName = Path.GetFileName(file.FileName);
           if (fileName != null)
           {
-            // Create userid/deviceid folder
-            var destinationPath = Path.Combine(Server.MapPath("~/users"),
-              User.Identity.GetUserName(), id.ToString());
-            if (!Directory.Exists(destinationPath))
-            {
-              // create folder and copy results.csv empty template
-              Directory.CreateDirectory(destinationPath);
-            }
-
-            string sourceFile = HttpRuntime.AppDomainAppPath + "exes\\results.csv";
-            System.IO.File.Copy(sourceFile, destinationPath + "\\results.csv");
 
             // Set fix filename for all upload file
             var tempFileNames = "deviceidyr" +
@@ -123,6 +120,9 @@ namespace MVC5.Controllers
           }
         }
       }
+
+      string sourceFile = HttpRuntime.AppDomainAppPath + "exes\\results.csv";
+      System.IO.File.Copy(sourceFile, destinationPath + "\\results.csv");
 
       return RedirectToAction("Index");
     }
@@ -1198,34 +1198,6 @@ namespace MVC5.Controllers
       return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
     }
 
-    public async Task<ActionResult> GetAverageAge(int id)
-    {
-      Device device = await _dbContext.Devices.FindAsync(id);
-      var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
-
-      var deviceFactory = devicesList.Select(pp => pp.Factory).Distinct().ToArray();
-
-      List<double> allFactoryFrequency = new List<double>();
-      foreach (var ff in deviceFactory)
-      {
-        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff).Average(dd => dd.AvgChangeYear));
-      }
-      var arrAllFactoryFrequency = allFactoryFrequency.ToArray();
-
-      var dataSelf = device.AvgChangeYear;
-      var dataMax = devicesList.Max(kk => kk.AvgChangeYear);
-      var dataMin = devicesList.Min(kk => kk.AvgChangeYear);
-      var dataAvg = devicesList.Average(kk => kk.AvgChangeYear);
-
-      List<double> frequency = new List<double>();
-      frequency.Add(dataSelf);
-      frequency.Add(dataMax);
-      frequency.Add(dataAvg);
-      frequency.Add(dataMin);
-      var arrFrequency = frequency.ToArray();
-      return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
-    }
-
     public async Task<ActionResult> GetReplacefee(int id)
     {
       Device device = await _dbContext.Devices.FindAsync(id);
@@ -1254,14 +1226,42 @@ namespace MVC5.Controllers
       return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
     }
 
+    public async Task<ActionResult> GetAverageAge(int id)
+    {
+      Device device = await _dbContext.Devices.FindAsync(id);
+      var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
+
+      var deviceFactory = devicesList.Where(ff=>ff.AvgChangeYear != null).Select(pp => pp.Factory).Distinct().ToArray();
+
+      List<double?> allFactoryFrequency = new List<double?>();
+      foreach (var ff in deviceFactory)
+      {
+        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff && dd.AvgChangeYear != null).Average(dd => dd.AvgChangeYear));
+      }
+      var arrAllFactoryFrequency = allFactoryFrequency.ToArray();
+
+      var dataSelf = device.AvgChangeYear;
+      var dataMax = devicesList.Max(kk => kk.AvgChangeYear);
+      var dataMin = devicesList.Min(kk => kk.AvgChangeYear);
+      var dataAvg = devicesList.Average(kk => kk.AvgChangeYear);
+
+      List<double?> frequency = new List<double?>();
+      frequency.Add(dataSelf);
+      frequency.Add(dataMax);
+      frequency.Add(dataAvg);
+      frequency.Add(dataMin);
+      var arrFrequency = frequency.ToArray();
+      return Json(new { deviceValue = arrFrequency, factory = deviceFactory, factoryValue = arrAllFactoryFrequency }, JsonRequestBehavior.AllowGet);
+    }
+
     public async Task<ActionResult> GetOptChangeYear(int id)
     {
       Device device = await _dbContext.Devices.FindAsync(id);
       var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
 
-      var deviceFactory = devicesList.Select(pp => pp.Factory).Distinct().ToArray();
+      var deviceFactory = devicesList.Where(ff=>ff.OptChangeYear != null).Select(pp => pp.Factory).Distinct().ToArray();
 
-      List<double> allFactoryFrequency = new List<double>();
+      List<double?> allFactoryFrequency = new List<double?>();
       foreach (var ff in deviceFactory)
       {
         allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff).Average(dd => dd.OptChangeYear));
@@ -1273,7 +1273,7 @@ namespace MVC5.Controllers
       var dataMin = devicesList.Min(kk => kk.OptChangeYear);
       var dataAvg = devicesList.Average(kk => kk.OptChangeYear);
 
-      List<double> frequency = new List<double>();
+      List<double?> frequency = new List<double?>();
       frequency.Add(dataSelf);
       frequency.Add(dataMax);
       frequency.Add(dataAvg);
@@ -1287,12 +1287,12 @@ namespace MVC5.Controllers
       Device device = await _dbContext.Devices.FindAsync(id);
       var devicesList = _dbContext.Devices.Where(dd => dd.Type == device.Type);
 
-      var deviceFactory = devicesList.Select(pp => pp.Factory).Distinct().ToArray();
+      var deviceFactory = devicesList.Where(ff=>ff.ScrapCost != null).Select(pp => pp.Factory).Distinct().ToArray();
 
-      List<double> allFactoryFrequency = new List<double>();
+      List<double?> allFactoryFrequency = new List<double?>();
       foreach (var ff in deviceFactory)
       {
-        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff).Average(dd => dd.ScrapCost));
+        allFactoryFrequency.Add(devicesList.Where(dd => dd.Factory == ff && dd.ScrapCost != null).Average(dd => dd.ScrapCost));
       }
       var arrAllFactoryFrequency = allFactoryFrequency.ToArray();
 
@@ -1301,7 +1301,7 @@ namespace MVC5.Controllers
       var dataMin = devicesList.Min(kk => kk.ScrapCost);
       var dataAvg = devicesList.Average(kk => kk.ScrapCost);
 
-      List<double> frequency = new List<double>();
+      List<double?> frequency = new List<double?>();
       frequency.Add(dataSelf);
       frequency.Add(dataMax);
       frequency.Add(dataAvg);

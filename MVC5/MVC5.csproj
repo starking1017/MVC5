@@ -223,6 +223,10 @@
     <Compile Include="Migrations\201612060811491_Init1.Designer.cs">
       <DependentUpon>201612060811491_Init1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612140604578_NullableValue.cs" />
+    <Compile Include="Migrations\201612140604578_NullableValue.Designer.cs">
+      <DependentUpon>201612140604578_NullableValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
@@ -1323,6 +1327,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612060811491_Init1.resx">
       <DependentUpon>201612060811491_Init1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612140604578_NullableValue.resx">
+      <DependentUpon>201612140604578_NullableValue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
