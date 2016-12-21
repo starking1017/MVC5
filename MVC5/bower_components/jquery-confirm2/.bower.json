@@ -1,6 +1,6 @@
 {
   "name": "jquery-confirm2",
-  "version": "2.5.1",
+  "version": "3.0.1",
   "homepage": "https://github.com/craftpip/jquery-confirm",
   "authors": [
     "boniface pereira <bonifacepereira@gmail.com>"
@@ -26,14 +26,13 @@
     "bootstrap": "3.*",
     "jquery": ">=1.6"
   },
-  "_release": "2.5.1",
+  "_release": "3.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "v2.5.1",
-    "commit": "4a6f8667796631beb785ef0c2ad1ec4f0463ef42"
+    "tag": "v3.0.1",
+    "commit": "9e5845190e2316b5ef0b89b12579b8810981141f"
   },
-  "_source": "git://github.com/craftpip/jquery-confirm.git",
-  "_target": "~2.5.1",
-  "_originalSource": "craftpip/jquery-confirm",
-  "_direct": true
+  "_source": "https://github.com/craftpip/jquery-confirm.git",
+  "_target": "3.0.1",
+  "_originalSource": "jquery-confirm2"
 }

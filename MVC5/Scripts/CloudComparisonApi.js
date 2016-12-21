@@ -34,7 +34,7 @@ function GetMaintainFrequency(controllerName, id) {
       $("#chart")
         .kendoChart({
           theme: "blueOpal",
-            
+
           title: "厂商维护频率比较",
 
           series: [
@@ -74,7 +74,7 @@ function GetAverageAge(controllerName, id) {
 
       $("#chart1")
         .kendoChart({
-          title: "总体平均壽命比较",
+          title: "总体平均寿命比较",
           series: [{ data: result.deviceValue }],
           categoryAxis: {
             categories: ["自己", "最大", "平均", "最小"],
@@ -82,7 +82,7 @@ function GetAverageAge(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "平均壽命 : #= value #"
+            template: "平均寿命 : #= value #"
           }
         });
 
@@ -90,7 +90,7 @@ function GetAverageAge(controllerName, id) {
         .kendoChart({
           theme: "blueOpal",
 
-          title: "厂商平均壽命比较",
+          title: "厂商平均寿命比较",
 
           series: [
           {
@@ -103,7 +103,7 @@ function GetAverageAge(controllerName, id) {
           },
           tooltip: {
             visible: true,
-            template: "平均壽命 : #= value #"
+            template: "平均寿命 : #= value #"
           }
 
         });
@@ -275,3 +275,4 @@ function GetScrapCost(controllerName, id) {
     }
   });
 }
+

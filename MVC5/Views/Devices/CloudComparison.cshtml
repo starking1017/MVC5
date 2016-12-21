@@ -7,41 +7,41 @@
 
 @*header*@
 <div class="row">
-    <div class="col-sm-4">
-        <h2>云比较</h2>
+  <div class="col-sm-4">
+    <h2>云比较</h2>
 
-    </div>
-    <div>
-        <input type="button" class="btn btn-primary pull-right" value="回生命管理选单"
-               onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
-    </div>
+  </div>
+  <div>
+    <input type="button" class="btn btn-primary pull-right" value="回生命管理选单"
+           onclick="location.href='@Url.Action("LifeManageMenu", "Devices", new { id = Model.ID })'" />
+  </div>
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading">云比较</div>
-    <div class="panel-body">
-        <div class="form-inline text-center">
-            <input type="button" class="btn btn-success" value="维护频率" onclick="MaintainFrequency();" />
-            <input type="button" class="btn btn-success" value="平均壽命" onclick="AverageAge();" />
-            <input type="button" class="btn btn-success" value="更换成本" onclick="Replacefee();" />
-            <input type="button" class="btn btn-success" value="报废代价" onclick="ScrapCost();" />
-            <input type="button" class="btn btn-success" value="最优更换年龄" onclick="OptChangeYear();" />
-        </div>
-        <label class="alert-danger" name="status" id="status"></label>
-        <p></p>
-        <div class="demo-section k-content wide">
-            @(Html.Kendo().Chart()
-          .Name("chart")
-            )
-        </div>
-        <p></p>
-        <div class="demo-section k-content wide">
-            @(Html.Kendo().Chart()
-          .Name("chart1")
-            )
-        </div>
-        <p></p>
+  <div class="panel-heading">云比较</div>
+  <div class="panel-body">
+    <div class="form-inline text-center">
+      <input type="button" class="btn btn-success" value="维护频率" onclick="MaintainFrequency();" />
+      <input type="button" class="btn btn-success" value="平均寿命" onclick="AverageAge();" />
+      <input type="button" class="btn btn-success" value="更换成本" onclick="Replacefee();" />
+      <input type="button" class="btn btn-success" value="报废代价" onclick="ScrapCost();" />
+      <input type="button" class="btn btn-success" value="最优更换年龄" onclick="OptChangeYear();" />
     </div>
+    <label class="alert-danger" name="status" id="status"></label>
+    <p></p>
+    <div class="demo-section k-content wide">
+      @(Html.Kendo().Chart()
+          .Name("chart")
+      )
+    </div>
+    <p></p>
+    <div class="demo-section k-content wide">
+      @(Html.Kendo().Chart()
+          .Name("chart1")
+      )
+    </div>
+    <p></p>
+  </div>
 </div>
 
 <script src="@Url.Content("~/Scripts/CloudComparisonApi.js")"></script>
@@ -78,3 +78,4 @@
   }
 
 </script>
+
